@@ -1,603 +1,558 @@
-// src/pages/AdminDashboardPage.jsx
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAdmin } from '../contexts/AdminContext';
-import {
-  getAdminStats,
-  changeAdminPassword,
-  fetchOrders,
-  adminUpdateOrderStatus,
-  fetchProducts,
-  adminCreateProduct,
-  adminUpdateProduct,
-  adminDeleteProduct,
-} from '../services/api';
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>لوحة تحكم Royal Touch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="rt-body">
 
-const AdminDashboardPage = () => {
-  const { admin, isLoggedIn, logout } = useAdmin();
-  const navigate = useNavigate();
-
-  // الإحصائيات
-  const [stats, setStats] = useState(null);
-  const [statsError, setStatsError] = useState(null);
-
-  // الطلبات
-  const [orders, setOrders] = useState([]);
-  const [statusFilter, setStatusFilter] = useState('');
-  const [ordersError, setOrdersError] = useState(null);
-  const [ordersLoading, setOrdersLoading] = useState(false);
-
-  // تغيير كلمة المرور
-  const [pwForm, setPwForm] = useState({ old_password: '', new_password: '' });
-  const [pwMsg, setPwMsg] = useState(null);
-  const [pwError, setPwError] = useState(null);
-  const [pwLoading, setPwLoading] = useState(false);
-
-  // إدارة المنتجات
-  const [products, setProducts] = useState([]);
-  const [productsLoading, setProductsLoading] = useState(false);
-  const [productsError, setProductsError] = useState(null);
-  const [editingProductId, setEditingProductId] = useState(null);
-  const [productForm, setProductForm] = useState({
-    name: '',
-    description: '',
-    category: '',
-    price: '',
-    images_text: '',
-    sizes_text: '',
-    is_offer: false,
-    discount_price: '',
-  });
-
-  // حماية مسار الأدمن: لو مش داخل → روح لصفحة الدخول
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate('/admin/login');
-    }
-  }, [isLoggedIn, navigate]);
-
-  // تحميل الإحصائيات
-  useEffect(() => {
-    if (!admin?.token) return;
-    const loadStats = async () => {
-      try {
-        setStatsError(null);
-        const data = await getAdminStats(admin.token);
-        setStats(data);
-      } catch (err) {
-        setStatsError(err.message || 'فشل تحميل الإحصائيات');
-      }
-    };
-    loadStats();
-  }, [admin]);
-
-  // تحميل الطلبات حسب الفلتر
-  useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        setOrdersLoading(true);
-        setOrdersError(null);
-        const data = await fetchOrders(statusFilter || undefined);
-        setOrders(data);
-      } catch (err) {
-        setOrdersError(err.message || 'فشل تحميل الطلبات');
-      } finally {
-        setOrdersLoading(false);
-      }
-    };
-    loadOrders();
-  }, [statusFilter]);
-
-  // تحميل المنتجات لإدارة العروض والأصناف
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        setProductsLoading(true);
-        setProductsError(null);
-        const data = await fetchProducts();
-        setProducts(data);
-      } catch (err) {
-        setProductsError(err.message || 'فشل تحميل المنتجات');
-      } finally {
-        setProductsLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, []);
-
-  // تغيير كلمة المرور
-  const handlePwChange = (e) => {
-    const { name, value } = e.target;
-    setPwForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePwSubmit = async (e) => {
-    e.preventDefault();
-    if (!admin?.token) return;
-    setPwError(null);
-    setPwMsg(null);
-    try {
-      setPwLoading(true);
-      const res = await changeAdminPassword(admin.token, pwForm);
-      setPwMsg(res.message || 'تم تغيير كلمة المرور بنجاح');
-      setPwForm({ old_password: '', new_password: '' });
-    } catch (err) {
-      setPwError(err.message || 'فشل تغيير كلمة المرور');
-    } finally {
-      setPwLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
-  // تغيير حالة الطلب من جدول الطلبات
-  const handleOrderStatusChange = async (orderId, newStatus) => {
-    if (!admin?.token) return;
-    try {
-      await adminUpdateOrderStatus(admin.token, orderId, newStatus);
-      setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-      );
-    } catch (err) {
-      alert(err.message || 'فشل تحديث حالة الطلب');
-    }
-  };
-
-  // إدارة نموذج المنتج
-  const resetProductForm = () => {
-    setEditingProductId(null);
-    setProductForm({
-      name: '',
-      description: '',
-      category: '',
-      price: '',
-      images_text: '',
-      sizes_text: '',
-      is_offer: false,
-      discount_price: '',
-    });
-  };
-
-  const handleProductFormChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setProductForm((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const startEditProduct = (product) => {
-    setEditingProductId(product.id);
-    setProductForm({
-      name: product.name,
-      description: product.description,
-      category: product.category,
-      price: String(product.price),
-      images_text: (product.images || []).join(','),
-      sizes_text: JSON.stringify(product.sizes || []),
-      is_offer: !!product.is_offer,
-      discount_price:
-        product.discount_price != null ? String(product.discount_price) : '',
-    });
-  };
-
-  const handleProductSubmit = async (e) => {
-    e.preventDefault();
-    if (!admin?.token) return;
-
-    try {
-      setProductsError(null);
-
-      const price = parseFloat(productForm.price || '0');
-      const discountPrice = productForm.discount_price
-        ? parseFloat(productForm.discount_price)
-        : null;
-
-      const images = productForm.images_text
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-
-      let sizes = [];
-      if (productForm.sizes_text.trim()) {
-        try {
-          sizes = JSON.parse(productForm.sizes_text);
-        } catch (err) {
-          setProductsError('صيغة المقاسات غير صحيحة، يرجى إدخال JSON صحيح');
-          return;
-        }
-      }
-
-      const payload = {
-        name: productForm.name,
-        description: productForm.description,
-        category: productForm.category,
-        price,
-        images,
-        sizes,
-        is_offer: productForm.is_offer,
-        discount_price: discountPrice,
-      };
-
-      if (editingProductId) {
-        const updated = await adminUpdateProduct(
-          admin.token,
-          editingProductId,
-          payload,
-        );
-        setProducts((prev) =>
-          prev.map((p) => (p.id === editingProductId ? updated : p)),
-        );
-      } else {
-        const created = await adminCreateProduct(admin.token, payload);
-        setProducts((prev) => [created, ...prev]);
-      }
-
-      resetProductForm();
-    } catch (err) {
-      setProductsError(err.message || 'فشل حفظ المنتج');
-    }
-  };
-
-  const handleDeleteProduct = async (id) => {
-    if (!admin?.token) return;
-    const ok = window.confirm('هل أنت متأكد من حذف هذا المنتج؟');
-    if (!ok) return;
-
-    try {
-      await adminDeleteProduct(admin.token, id);
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-    } catch (err) {
-      setProductsError(err.message || 'فشل حذف المنتج');
-    }
-  };
-
-  return (
-    <div className="rt-page rt-admin-page">
-      {/* هيدر الأدمن مع اللوقو والزر */}
-      <div className="rt-admin-header">
-        <div className="rt-admin-header-left">
-          <div className="rt-admin-logo-wrap">
-            <img
-              src="/logo-royal-touch.png"
-              alt="Royal Touch"
-              className="rt-admin-logo-img"
-            />
-            <div>
-              <div className="rt-admin-title-main">لوحة تحكم Royal Touch</div>
-              <div className="rt-admin-title-sub">إدارة الطلبات والمنتجات</div>
-            </div>
-          </div>
-        </div>
-        <div className="rt-admin-header-right">
-          <span className="rt-admin-welcome">
-            مرحباً، <strong>{admin?.username}</strong>
-          </span>
-          <button className="rt-secondary-btn" onClick={handleLogout}>
-            تسجيل خروج
-          </button>
+  <!-- ======= شريط علوي مع اللوقو ======= -->
+  <header class="rt-header">
+    <div class="rt-header-inner">
+      <div class="rt-logo-wrap">
+        <img src="logo-royal-touch.png" alt="Royal Touch Logo" class="rt-logo" />
+        <div class="rt-logo-text">
+          <h1>Royal Touch</h1>
+          <p>لوحة التحكم - متجر اللمسة الملكية</p>
         </div>
       </div>
+    </div>
+  </header>
 
-      {/* الإحصائيات */}
-      <section className="rt-section">
-        <div className="rt-section-header">
-          <h2>الإحصائيات العامة</h2>
+  <main class="rt-main">
+
+    <!-- ======= شاشة تسجيل الدخول للأدمن ======= -->
+    <section id="admin-login-section" class="rt-card rt-auth-card">
+      <h2 class="rt-section-title">تسجيل دخول الأدمن</h2>
+      <p class="rt-muted">
+        أدخل بيانات الدخول للوصول إلى لوحة التحكم.
+        <br />
+        (القيمة الافتراضية لأول مرة: اسم المستخدم <strong>admin</strong> وكلمة المرور
+        <strong>admin123</strong> ثم يمكنك تغييرها من داخل اللوحة)
+      </p>
+
+      <form id="admin-login-form" class="rt-form">
+        <div class="rt-form-group">
+          <label for="admin-username">اسم المستخدم</label>
+          <input type="text" id="admin-username" class="rt-input" placeholder="مثال: admin" required />
         </div>
-        {statsError && <div className="rt-error">{statsError}</div>}
-        {!stats && !statsError ? (
-          <div>جاري تحميل الإحصائيات...</div>
-        ) : (
-          stats && (
-            <div className="rt-admin-stats-grid">
-              <div className="rt-admin-stat-card">
-                <span className="label">عدد المنتجات</span>
-                <span className="value">{stats.total_products}</span>
-              </div>
-              <div className="rt-admin-stat-card">
-                <span className="label">عدد الطلبات</span>
-                <span className="value">{stats.total_orders}</span>
-              </div>
-              <div className="rt-admin-stat-card">
-                <span className="label">طلبات قيد الانتظار</span>
-                <span className="value">{stats.pending_orders}</span>
-              </div>
-              <div className="rt-admin-stat-card">
-                <span className="label">إجمالي الإيرادات</span>
-                <span className="value">
-                  {stats.total_revenue.toFixed(2)} د.ل
-                </span>
-              </div>
-            </div>
-          )
-        )}
+
+        <div class="rt-form-group">
+          <label for="admin-password">كلمة المرور</label>
+          <input type="password" id="admin-password" class="rt-input" placeholder="أدخل كلمة المرور" required />
+        </div>
+
+        <button type="submit" class="rt-btn rt-btn-gold rt-btn-full">
+          دخول
+        </button>
+
+        <p id="login-error" class="rt-error" style="display:none;"></p>
+      </form>
+    </section>
+
+    <!-- ======= لوحة التحكم بعد تسجيل الدخول ======= -->
+    <section id="admin-dashboard" class="rt-dashboard" style="display:none;">
+
+      <!-- شريط أعلى اللوحة -->
+      <div class="rt-dashboard-top">
+        <div>
+          <h2>مرحباً، <span id="admin-name-display">أدمن</span> 👑</h2>
+          <p class="rt-muted">يمكنك من هنا إدارة المنتجات، العروض، الأصناف وكلمة مرور الأدمن.</p>
+        </div>
+        <button id="logout-btn" class="rt-btn rt-btn-outline">
+          تسجيل الخروج
+        </button>
+      </div>
+
+      <!-- كروت الإحصائيات -->
+      <section class="rt-section">
+        <h3 class="rt-section-title">إحصائيات سريعة</h3>
+        <div class="rt-stats-grid">
+          <div class="rt-card rt-stat-card">
+            <span class="rt-stat-label">عدد المنتجات</span>
+            <span id="stat-products" class="rt-stat-value">0</span>
+          </div>
+          <div class="rt-card rt-stat-card">
+            <span class="rt-stat-label">العروض الفعّالة</span>
+            <span id="stat-offers" class="rt-stat-value">0</span>
+          </div>
+          <div class="rt-card rt-stat-card">
+            <span class="rt-stat-label">التصنيفات</span>
+            <span id="stat-categories" class="rt-stat-value">0</span>
+          </div>
+          <div class="rt-card rt-stat-card">
+            <span class="rt-stat-label">طلبات (تجريبية)</span>
+            <span id="stat-orders" class="rt-stat-value">0</span>
+          </div>
+        </div>
       </section>
 
-      {/* الطلبات */}
-      <section className="rt-section">
-        <div className="rt-section-header">
-          <h2>الطلبات</h2>
-          <div className="rt-admin-filter-wrap">
-            <label>فلترة حسب الحالة:</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="">الكل</option>
-              <option value="pending">قيد الانتظار</option>
-              <option value="confirmed">مؤكد</option>
-              <option value="delivered">تم التسليم</option>
-              <option value="cancelled">ملغي</option>
+      <!-- تغيير كلمة مرور الأدمن -->
+      <section class="rt-section">
+        <h3 class="rt-section-title">تغيير كلمة مرور الأدمن</h3>
+        <form id="password-form" class="rt-form rt-grid-3">
+          <div class="rt-form-group">
+            <label for="current-password">كلمة المرور الحالية</label>
+            <input type="password" id="current-password" class="rt-input" required />
+          </div>
+          <div class="rt-form-group">
+            <label for="new-password">كلمة المرور الجديدة</label>
+            <input type="password" id="new-password" class="rt-input" required />
+          </div>
+          <div class="rt-form-group">
+            <label for="confirm-password">تأكيد كلمة المرور الجديدة</label>
+            <input type="password" id="confirm-password" class="rt-input" required />
+          </div>
+          <button type="submit" class="rt-btn rt-btn-gold">
+            حفظ كلمة المرور
+          </button>
+          <p id="password-message" class="rt-success" style="display:none;"></p>
+        </form>
+      </section>
+
+      <!-- إدارة التصنيفات -->
+      <section class="rt-section">
+        <h3 class="rt-section-title">إدارة الأصناف (التصنيفات)</h3>
+        <form id="category-form" class="rt-form rt-grid-2">
+          <div class="rt-form-group">
+            <label for="category-name">اسم الصنف</label>
+            <input type="text" id="category-name" class="rt-input" placeholder="مثال: فساتين بنات" required />
+          </div>
+          <button type="submit" class="rt-btn rt-btn-gold">
+            إضافة صنف
+          </button>
+        </form>
+
+        <ul id="category-list" class="rt-pill-list"></ul>
+      </section>
+
+      <!-- إدارة المنتجات + العروض -->
+      <section class="rt-section">
+        <h3 class="rt-section-title">إدارة المنتجات والعروض</h3>
+
+        <!-- نموذج إضافة / تعديل منتج -->
+        <form id="product-form" class="rt-form rt-grid-4">
+          <div class="rt-form-group">
+            <label for="product-name">اسم المنتج</label>
+            <input type="text" id="product-name" class="rt-input" required />
+          </div>
+
+          <div class="rt-form-group">
+            <label for="product-category">الصنف</label>
+            <select id="product-category" class="rt-input"></select>
+          </div>
+
+          <div class="rt-form-group">
+            <label for="product-price">السعر</label>
+            <input type="number" id="product-price" class="rt-input" min="0" step="0.01" required />
+          </div>
+
+          <div class="rt-form-group">
+            <label for="product-offer-price">سعر العرض (اختياري)</label>
+            <input type="number" id="product-offer-price" class="rt-input" min="0" step="0.01" />
+          </div>
+
+          <div class="rt-form-group rt-full-width">
+            <label for="product-description">الوصف</label>
+            <textarea id="product-description" class="rt-input" rows="2"></textarea>
+          </div>
+
+          <div class="rt-form-group">
+            <label for="product-image-url">رابط الصورة (اختياري)</label>
+            <input type="text" id="product-image-url" class="rt-input" placeholder="https://..." />
+          </div>
+
+          <div class="rt-form-group">
+            <label for="product-in-offer">في عرض؟</label>
+            <select id="product-in-offer" class="rt-input">
+              <option value="no">لا</option>
+              <option value="yes">نعم</option>
             </select>
           </div>
-        </div>
 
-        {ordersError && <div className="rt-error">{ordersError}</div>}
-        {ordersLoading ? (
-          <div>جاري تحميل الطلبات...</div>
-        ) : (
-          <div className="rt-admin-orders-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>رقم الطلب</th>
-                  <th>اسم الزبون</th>
-                  <th>الهاتف</th>
-                  <th>الإجمالي</th>
-                  <th>الحالة</th>
-                  <th>التاريخ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.order_number}</td>
-                    <td>{order.customer_info?.name}</td>
-                    <td>{order.customer_info?.phone}</td>
-                    <td>{order.total_amount} د.ل</td>
-                    <td>
-                      <select
-                        className="rt-admin-status-select"
-                        value={order.status}
-                        onChange={(e) =>
-                          handleOrderStatusChange(order.id, e.target.value)
-                        }
-                      >
-                        <option value="pending">pending</option>
-                        <option value="confirmed">confirmed</option>
-                        <option value="delivered">delivered</option>
-                        <option value="cancelled">cancelled</option>
-                      </select>
-                    </td>
-                    <td>
-                      {new Date(order.order_date).toLocaleString('ar-LY')}
-                    </td>
-                  </tr>
-                ))}
-                {orders.length === 0 && (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: 'center' }}>
-                      لا توجد طلبات
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+          <input type="hidden" id="editing-product-id" value="" />
+
+          <button type="submit" class="rt-btn rt-btn-gold">
+            حفظ المنتج
+          </button>
+          <button type="button" id="product-form-reset" class="rt-btn rt-btn-ghost">
+            إلغاء / منتج جديد
+          </button>
+
+          <p class="rt-muted rt-full-width">
+            ➕ من هنا تقدر تضيف منتج جديد، أو تعدّل على منتج موجود، أو تضيفه إلى العروض.
+          </p>
+        </form>
+
+        <!-- جدول المنتجات -->
+        <div class="rt-table-wrapper">
+          <table class="rt-table">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الصنف</th>
+                <th>السعر</th>
+                <th>سعر العرض</th>
+                <th>عرض؟</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body">
+              <!-- يمتلئ ديناميكياً -->
+            </tbody>
+          </table>
+        </div>
       </section>
 
-      {/* تغيير كلمة المرور */}
-      <section className="rt-section">
-        <div className="rt-section-header">
-          <h2>تغيير كلمة مرور الأدمن</h2>
-        </div>
-        <form
-          className="rt-checkout-form rt-admin-card"
-          style={{ maxWidth: 420 }}
-          onSubmit={handlePwSubmit}
-        >
-          <div className="rt-field">
-            <label>كلمة المرور الحالية</label>
-            <input
-              type="password"
-              name="old_password"
-              value={pwForm.old_password}
-              onChange={handlePwChange}
-            />
+      <!-- إشعارات واتساب للأعمال -->
+      <section class="rt-section">
+        <h3 class="rt-section-title">إرسال إشعار واتساب لعميل</h3>
+        <p class="rt-muted">
+          هذه الأداة تبعث رسالة جاهزة لـ WhatsApp Business على الرقم
+          <strong>0917040244</strong> تحتوي تفاصيل الطلب.
+        </p>
+
+        <form id="whatsapp-form" class="rt-form rt-grid-3">
+          <div class="rt-form-group">
+            <label for="wa-customer-name">اسم الزبونة</label>
+            <input type="text" id="wa-customer-name" class="rt-input" placeholder="اسم الزبونة" required />
           </div>
-          <div className="rt-field">
-            <label>كلمة المرور الجديدة</label>
-            <input
-              type="password"
-              name="new_password"
-              value={pwForm.new_password}
-              onChange={handlePwChange}
-            />
+          <div class="rt-form-group">
+            <label for="wa-order-id">رقم الطلب</label>
+            <input type="text" id="wa-order-id" class="rt-input" placeholder="مثال: RT-00015" required />
           </div>
-          {pwError && <div className="rt-error">{pwError}</div>}
-          {pwMsg && <div className="rt-success">{pwMsg}</div>}
-          <button className="rt-primary-btn" type="submit" disabled={pwLoading}>
-            {pwLoading ? 'جاري التغيير...' : 'تغيير كلمة المرور'}
+          <div class="rt-form-group">
+            <label for="wa-order-total">إجمالي المبلغ</label>
+            <input type="number" id="wa-order-total" class="rt-input" min="0" step="0.01" required />
+          </div>
+
+          <button type="submit" class="rt-btn rt-btn-whatsapp">
+            إرسال إشعار واتساب
           </button>
         </form>
       </section>
 
-      {/* إدارة المنتجات والعروض */}
-      <section className="rt-section">
-        <div className="rt-section-header">
-          <h2>إدارة المنتجات والعروض</h2>
-          <p className="rt-section-subtitle">
-            من هنا تقدر تضيف منتجات جديدة، تعدّل منتجات قديمة، أو تحذفها.
-          </p>
-        </div>
+    </section>
+  </main>
 
-        <form
-          className="rt-checkout-form rt-admin-card"
-          style={{ marginBottom: '1.25rem' }}
-          onSubmit={handleProductSubmit}
-        >
-          <div className="rt-admin-form-grid">
-            <div className="rt-field">
-              <label>اسم المنتج</label>
-              <input
-                name="name"
-                value={productForm.name}
-                onChange={handleProductFormChange}
-              />
-            </div>
-            <div className="rt-field">
-              <label>الفئة / التصنيف</label>
-              <input
-                name="category"
-                value={productForm.category}
-                onChange={handleProductFormChange}
-              />
-            </div>
-            <div className="rt-field">
-              <label>السعر الأساسي</label>
-              <input
-                name="price"
-                type="number"
-                step="0.01"
-                value={productForm.price}
-                onChange={handleProductFormChange}
-              />
-            </div>
-            <div className="rt-field rt-field-inline">
-              <label className="rt-checkbox-label">
-                <input
-                  type="checkbox"
-                  name="is_offer"
-                  checked={productForm.is_offer}
-                  onChange={handleProductFormChange}
-                />{' '}
-                عرض خاص
-              </label>
-              {productForm.is_offer && (
-                <input
-                  className="rt-inline-input"
-                  name="discount_price"
-                  type="number"
-                  step="0.01"
-                  placeholder="سعر العرض"
-                  value={productForm.discount_price}
-                  onChange={handleProductFormChange}
-                />
-              )}
-            </div>
-          </div>
+  <!-- ======= سكربت لوحة التحكم (LocalStorage + واتساب) ======= -->
+  <script>
+    // ===== بيانات الأدمن (تخزين محلي في المتصفح) =====
+    const ADMIN_USER_KEY = 'rt_admin_username';
+    const ADMIN_PASS_KEY = 'rt_admin_password';
 
-          <div className="rt-field">
-            <label>الوصف</label>
-            <textarea
-              name="description"
-              value={productForm.description}
-              onChange={handleProductFormChange}
-            />
-          </div>
+    // تعيين قيم افتراضية لأول مرة
+    function ensureDefaultAdmin() {
+      if (!localStorage.getItem(ADMIN_USER_KEY)) {
+        localStorage.setItem(ADMIN_USER_KEY, 'admin');
+      }
+      if (!localStorage.getItem(ADMIN_PASS_KEY)) {
+        localStorage.setItem(ADMIN_PASS_KEY, 'admin123');
+      }
+    }
 
-          <div className="rt-field">
-            <label>صور المنتج (روابط مفصولة بفاصلة ,)</label>
-            <input
-              name="images_text"
-              value={productForm.images_text}
-              onChange={handleProductFormChange}
-              placeholder="https://image1.jpg, https://image2.jpg"
-            />
-          </div>
+    ensureDefaultAdmin();
 
-          <div className="rt-field">
-            <label>المقاسات (JSON)</label>
-            <textarea
-              name="sizes_text"
-              value={productForm.sizes_text}
-              onChange={handleProductFormChange}
-              placeholder='[{"size":"S","quantity":10},{"size":"M","quantity":5}]'
-            />
-          </div>
+    const loginSection = document.getElementById('admin-login-section');
+    const dashboardSection = document.getElementById('admin-dashboard');
+    const adminNameDisplay = document.getElementById('admin-name-display');
+    const loginForm = document.getElementById('admin-login-form');
+    const loginError = document.getElementById('login-error');
+    const logoutBtn = document.getElementById('logout-btn');
 
-          {productsError && <div className="rt-error">{productsError}</div>}
+    // ===== تسجيل الدخول =====
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = document.getElementById('admin-username').value.trim();
+      const password = document.getElementById('admin-password').value.trim();
 
-          <div className="rt-admin-form-actions">
-            <button className="rt-primary-btn" type="submit">
-              {editingProductId ? 'تحديث المنتج' : 'إضافة منتج'}
-            </button>
-            {editingProductId && (
-              <button
-                type="button"
-                className="rt-secondary-btn"
-                onClick={resetProductForm}
-              >
-                إلغاء التعديل
-              </button>
-            )}
-          </div>
-        </form>
+      const storedUser = localStorage.getItem(ADMIN_USER_KEY);
+      const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
 
-        {productsLoading ? (
-          <div>جاري تحميل المنتجات...</div>
-        ) : (
-          <div className="rt-admin-products-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>الاسم</th>
-                  <th>الفئة</th>
-                  <th>السعر</th>
-                  <th>عرض؟</th>
-                  <th>تاريخ الإنشاء</th>
-                  <th>تحكم</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((p) => (
-                  <tr key={p.id}>
-                    <td>{p.name}</td>
-                    <td>{p.category}</td>
-                    <td>{p.price} د.ل</td>
-                    <td>{p.is_offer ? 'نعم' : 'لا'}</td>
-                    <td>
-                      {p.created_at
-                        ? new Date(p.created_at).toLocaleString('ar-LY')
-                        : '-'}
-                    </td>
-                    <td>
-                      <button
-                        className="rt-link-button"
-                        type="button"
-                        onClick={() => startEditProduct(p)}
-                      >
-                        تعديل
-                      </button>
-                      <button
-                        className="rt-text-btn"
-                        type="button"
-                        onClick={() => handleDeleteProduct(p.id)}
-                      >
-                        حذف
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {products.length === 0 && (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: 'center' }}>
-                      لا توجد منتجات حالياً
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-    </div>
-  );
-};
+      if (username === storedUser && password === storedPass) {
+        loginError.style.display = 'none';
+        loginSection.style.display = 'none';
+        dashboardSection.style.display = 'block';
+        adminNameDisplay.textContent = username;
+      } else {
+        loginError.textContent = 'بيانات الدخول غير صحيحة.';
+        loginError.style.display = 'block';
+      }
+    });
 
-export default AdminDashboardPage;
+    // ===== تسجيل الخروج =====
+    logoutBtn.addEventListener('click', function () {
+      dashboardSection.style.display = 'none';
+      loginSection.style.display = 'block';
+      document.getElementById('admin-password').value = '';
+    });
+
+    // ===== تغيير كلمة مرور الأدمن =====
+    const passwordForm = document.getElementById('password-form');
+    const passwordMessage = document.getElementById('password-message');
+
+    passwordForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const current = document.getElementById('current-password').value.trim();
+      const newPass = document.getElementById('new-password').value.trim();
+      const confirm = document.getElementById('confirm-password').value.trim();
+      const storedPass = localStorage.getItem(ADMIN_PASS_KEY);
+
+      if (current !== storedPass) {
+        passwordMessage.textContent = 'كلمة المرور الحالية غير صحيحة.';
+        passwordMessage.className = 'rt-error';
+        passwordMessage.style.display = 'block';
+        return;
+      }
+
+      if (!newPass || newPass.length < 6) {
+        passwordMessage.textContent = 'كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل.';
+        passwordMessage.className = 'rt-error';
+        passwordMessage.style.display = 'block';
+        return;
+      }
+
+      if (newPass !== confirm) {
+        passwordMessage.textContent = 'تأكيد كلمة المرور غير مطابق.';
+        passwordMessage.className = 'rt-error';
+        passwordMessage.style.display = 'block';
+        return;
+      }
+
+      localStorage.setItem(ADMIN_PASS_KEY, newPass);
+      passwordMessage.textContent = 'تم تحديث كلمة المرور بنجاح ✅';
+      passwordMessage.className = 'rt-success';
+      passwordMessage.style.display = 'block';
+
+      passwordForm.reset();
+    });
+
+    // ====== إدارة الأصناف ======
+    const CATEGORY_KEY = 'rt_categories';
+    const categoryForm = document.getElementById('category-form');
+    const categoryInput = document.getElementById('category-name');
+    const categoryList = document.getElementById('category-list');
+    const productCategorySelect = document.getElementById('product-category');
+
+    function loadCategories() {
+      const raw = localStorage.getItem(CATEGORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveCategories(categories) {
+      localStorage.setItem(CATEGORY_KEY, JSON.stringify(categories));
+      updateCategoryUI();
+    }
+
+    function updateCategoryUI() {
+      const categories = loadCategories();
+      categoryList.innerHTML = '';
+      productCategorySelect.innerHTML = '';
+
+      categories.forEach((cat, index) => {
+        // عنصر في قائمة الأصناف
+        const li = document.createElement('li');
+        li.className = 'rt-pill';
+        li.textContent = cat;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'rt-pill-remove';
+        removeBtn.textContent = '✕';
+        removeBtn.addEventListener('click', () => {
+          const updated = categories.filter((_, i) => i !== index);
+          saveCategories(updated);
+        });
+
+        li.appendChild(removeBtn);
+        categoryList.appendChild(li);
+
+        // خيار في select الصنف
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        productCategorySelect.appendChild(option);
+      });
+
+      // تحديث إحصائية التصنيفات
+      document.getElementById('stat-categories').textContent = categories.length;
+    }
+
+    categoryForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = categoryInput.value.trim();
+      if (!name) return;
+
+      const categories = loadCategories();
+      if (!categories.includes(name)) {
+        categories.push(name);
+        saveCategories(categories);
+      }
+      categoryInput.value = '';
+    });
+
+    // ====== إدارة المنتجات والعروض ======
+    const PRODUCTS_KEY = 'rt_products';
+    const productForm = document.getElementById('product-form');
+    const productsTableBody = document.getElementById('products-table-body');
+    const resetProductBtn = document.getElementById('product-form-reset');
+    const editingProductIdInput = document.getElementById('editing-product-id');
+
+    function loadProducts() {
+      const raw = localStorage.getItem(PRODUCTS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveProducts(products) {
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+      updateProductsUI();
+    }
+
+    function updateProductsUI() {
+      const products = loadProducts();
+      productsTableBody.innerHTML = '';
+
+      let offersCount = 0;
+
+      products.forEach((p) => {
+        if (p.inOffer === 'yes') offersCount++;
+
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.category || '-'}</td>
+          <td>${p.price.toFixed(2)} د.ل</td>
+          <td>${p.offerPrice ? p.offerPrice.toFixed(2) + ' د.ل' : '-'}</td>
+          <td>${p.inOffer === 'yes' ? 'نعم' : 'لا'}</td>
+          <td>
+            <button class="rt-btn rt-btn-xs rt-btn-ghost" data-action="edit">تعديل</button>
+            <button class="rt-btn rt-btn-xs rt-btn-danger" data-action="delete">حذف</button>
+          </td>
+        `;
+
+        // أزرار تعديل / حذف
+        tr.querySelector('[data-action="edit"]').addEventListener('click', () => {
+          fillProductFormForEdit(p.id);
+        });
+
+        tr.querySelector('[data-action="delete"]').addEventListener('click', () => {
+          if (confirm('حذف المنتج نهائياً؟')) {
+            const updated = products.filter((x) => x.id !== p.id);
+            saveProducts(updated);
+          }
+        });
+
+        productsTableBody.appendChild(tr);
+      });
+
+      // تحديث الإحصائيات
+      document.getElementById('stat-products').textContent = products.length;
+      document.getElementById('stat-offers').textContent = offersCount;
+    }
+
+    function fillProductFormForEdit(id) {
+      const products = loadProducts();
+      const p = products.find((x) => x.id === id);
+      if (!p) return;
+
+      document.getElementById('product-name').value = p.name;
+      document.getElementById('product-category').value = p.category || '';
+      document.getElementById('product-price').value = p.price;
+      document.getElementById('product-offer-price').value = p.offerPrice || '';
+      document.getElementById('product-description').value = p.description || '';
+      document.getElementById('product-image-url').value = p.imageUrl || '';
+      document.getElementById('product-in-offer').value = p.inOffer || 'no';
+      editingProductIdInput.value = p.id;
+    }
+
+    productForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('product-name').value.trim();
+      const category = document.getElementById('product-category').value;
+      const price = parseFloat(document.getElementById('product-price').value || '0');
+      const offerPriceRaw = document.getElementById('product-offer-price').value;
+      const offerPrice = offerPriceRaw ? parseFloat(offerPriceRaw) : null;
+      const description = document.getElementById('product-description').value.trim();
+      const imageUrl = document.getElementById('product-image-url').value.trim();
+      const inOffer = document.getElementById('product-in-offer').value;
+      const editingId = editingProductIdInput.value;
+
+      if (!name) return;
+
+      const products = loadProducts();
+
+      if (editingId) {
+        // تعديل
+        const index = products.findIndex((x) => x.id === editingId);
+        if (index > -1) {
+          products[index] = {
+            ...products[index],
+            name,
+            category,
+            price,
+            offerPrice,
+            description,
+            imageUrl,
+            inOffer
+          };
+        }
+      } else {
+        // إضافة جديد
+        products.push({
+          id: 'p_' + Date.now(),
+          name,
+          category,
+          price,
+          offerPrice,
+          description,
+          imageUrl,
+          inOffer
+        });
+      }
+
+      saveProducts(products);
+      productForm.reset();
+      editingProductIdInput.value = '';
+    });
+
+    resetProductBtn.addEventListener('click', function () {
+      productForm.reset();
+      editingProductIdInput.value = '';
+    });
+
+    // ===== إشعارات واتساب للأعمال =====
+    const whatsappForm = document.getElementById('whatsapp-form');
+    whatsappForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('wa-customer-name').value.trim();
+      const orderId = document.getElementById('wa-order-id').value.trim();
+      const total = document.getElementById('wa-order-total').value.trim();
+
+      const msg =
+        'طلب جديد من متجر Royal Touch %0A' +
+        'الزبونة: ' + name + '%0A' +
+        'رقم الطلب: ' + orderId + '%0A' +
+        'الإجمالي: ' + total + ' د.ل';
+
+      const phone = '218917040244'; // واتساب أعمال
+      const url = 'https://wa.me/' + phone + '?text=' + msg;
+
+      window.open(url, '_blank');
+    });
+
+    // ===== تهيئة أولية عند فتح الصفحة =====
+    function initDashboard() {
+      updateCategoryUI();
+      updateProductsUI();
+    }
+
+    // لو حابب تجرب بدون تسجيل دخول، افعل السطر التالي:
+    // dashboardSection.style.display = 'block'; loginSection.style.display = 'none';
+
+    initDashboard();
+  </script>
+</body>
+</html>
