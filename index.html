@@ -3,333 +3,216 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Royal Touch Shop</title>
-
-  <!-- خط جميل عربي -->
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
-
-  <!-- ملف التنسيقات -->
+  <title>Royal Touch Shop - متجر اللمسة الملكية</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- شريط علوي -->
-  <header class="rt-header">
-    <div class="rt-container rt-header-inner">
-      <!-- اللوجو: تقدر تغيّره لصورة لاحقًا -->
-      <div class="rt-logo">
-        <!-- لو عندك صورة لوجو استبدل السطرين تحت بصورة:
-        <img src="logo.png" alt="Royal Touch Logo">
-        -->
-        <span class="rt-logo-mark">RT</span>
-        <span class="rt-logo-text">Royal Touch</span>
-      </div>
 
-      <nav class="rt-nav">
-        <a href="#hero">الرئيسية</a>
+  <!-- ===== الهيدر / الشعار + القائمة ===== -->
+  <header class="site-header">
+    <div class="container header-content">
+      <!-- الشعار -->
+      <a href="#home" class="brand">
+        <!-- تأكّد أن الصورة موجودة باسم logo-royal-touch.png في نفس المجلد -->
+        <img src="logo-royal-touch.png" alt="Royal Touch Logo" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-name-en">Royal Touch</span>
+          <span class="brand-name-ar">متجر اللمسة الملكية</span>
+        </div>
+      </a>
+
+      <!-- قائمة الروابط -->
+      <nav class="main-nav">
+        <a href="#home">الرئيسية</a>
         <a href="#products">المنتجات</a>
-        <a href="#cart">السلة</a>
-        <a href="#contact">تواصل</a>
-        <a href="admin.html" class="rt-nav-admin">دخول الأدمن</a>
+        <a href="#offers">العروض</a>
+        <a href="#contact">تواصل معنا</a>
+        <a href="#cart" class="nav-badge">
+          السلة
+          <span class="cart-count">0</span>
+        </a>
+        <a href="admin.html" class="admin-btn">دخول الإدارة</a>
       </nav>
+
+      <!-- زر القائمة للجوال -->
+      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">
+        ☰
+      </button>
     </div>
   </header>
 
-  <!-- هيدر رئيسي -->
-  <section id="hero" class="rt-hero">
-    <div class="rt-container rt-hero-inner">
-      <div class="rt-hero-text">
-        <h1>Royal Touch Shop</h1>
-        <p>
-          متجر اللمسة الملكية لبيع الملابس النسائية الفخمة بلمسة عصرية،
-          ألواننا الرئيسية زهري وذهبي ✨
-        </p>
-        <button class="rt-btn rt-btn-primary" onclick="scrollToProducts()">
-          تسوق الآن
-        </button>
-      </div>
-      <div class="rt-hero-badge">
-        <span>عرض خاص</span>
-        <p>خصومات على مجموعة من القطع المميزة</p>
-      </div>
-    </div>
-  </section>
+  <!-- قائمة الجوال -->
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#home">الرئيسية</a>
+    <a href="#products">المنتجات</a>
+    <a href="#offers">العروض</a>
+    <a href="#contact">تواصل معنا</a>
+    <a href="#cart">السلة</a>
+    <a href="admin.html">دخول الإدارة</a>
+  </nav>
 
-  <!-- قسم المنتجات -->
-  <section id="products" class="rt-section">
-    <div class="rt-container">
-      <h2 class="rt-section-title">المنتجات</h2>
-      <p class="rt-section-subtitle">اختاري القطعة والقياس ثم أضيفيها إلى السلة</p>
-
-      <div id="products-grid" class="rt-products-grid">
-        <!-- يتم تعبئتها من JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- قسم السلة -->
-  <section id="cart" class="rt-section rt-section-alt">
-    <div class="rt-container">
-      <h2 class="rt-section-title">سلة المشتريات</h2>
-      <p class="rt-section-subtitle">راجعي طلبك قبل الإرسال على الواتساب</p>
-
-      <div class="rt-cart-layout">
-        <div class="rt-cart-items">
-          <ul id="cart-items-list" class="rt-cart-list">
-            <!-- العناصر من JavaScript -->
-          </ul>
-          <p id="empty-cart" class="rt-cart-empty">السلة فارغة حاليًا.</p>
-        </div>
-
-        <div class="rt-cart-summary">
-          <div class="rt-cart-row">
-            <span>إجمالي القطع:</span>
-            <span id="cart-count">0</span>
+  <!-- ===== الهيرو / القسم الرئيسي ===== -->
+  <main id="home">
+    <section class="hero-section">
+      <div class="container hero-content">
+        <div class="hero-text">
+          <h1>مرحبًا بك في عالم الأناقة</h1>
+          <p>
+            متجر اللمسة الملكية لبيع الملابس النسائية الفخمة بلمسة عصرية،
+            ألواننا الأساسية زهرية وذهبية تعكس الفخامة والرقي.
+          </p>
+          <div class="hero-actions">
+            <a href="#products" class="btn-primary">تسوقي الآن</a>
+            <a href="#offers" class="btn-ghost">شاهدي العروض الخاصة</a>
           </div>
-          <div class="rt-cart-row">
-            <span>المجموع الكلي:</span>
-            <span id="cart-total">0</span>
-            <span class="rt-currency">د.ل</span>
-          </div>
-          <button class="rt-btn rt-btn-primary rt-btn-block" onclick="sendOrderOnWhatsApp()">
-            إرسال الطلب على الواتساب
-          </button>
-          <button class="rt-btn rt-btn-ghost rt-btn-block" onclick="clearCart()">
-            تفريغ السلة
-          </button>
-          <small class="rt-note">
-            سيتم فتح واتساب مع رسالة جاهزة تحتوي على تفاصيل الطلب، فقط تأكد من إرسالها.
-          </small>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- قسم تواصل -->
-  <section id="contact" class="rt-section">
-    <div class="rt-container rt-contact-grid">
-      <div>
-        <h2 class="rt-section-title">تواصل معنا</h2>
-        <p class="rt-section-subtitle">
-          لأي استفسار أو طلب خاص يمكنك التواصل معنا على الواتساب أعمال.
-        </p>
-        <ul class="rt-contact-list">
-          <li><strong>واتساب أعمال:</strong> 0917040244</li>
-          <li><strong>أوقات العمل:</strong> من 10 صباحًا حتى 10 مساءً</li>
-        </ul>
-        <a
-          class="rt-btn rt-btn-secondary"
-          href="https://wa.me/218917040244"
-          target="_blank"
-          rel="noopener"
-        >
-          تواصل واتساب مباشر
-        </a>
+    <!-- ===== قسم العروض ===== -->
+    <section id="offers" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>العروض الخاصة ✨</h2>
+          <p>خصومات على مجموعة من القطع المميزة لفترة محدودة.</p>
+        </div>
+
+        <div class="cards-grid">
+          <article class="card">
+            <h3>عرض فستان ملكي زهري</h3>
+            <p>فستان سهرة بلون زهري فاخر مع تفاصيل ذهبية ناعمة.</p>
+            <div class="card-footer">
+              <span class="price">150 د.ل</span>
+              <button class="btn-small">إضافة إلى السلة</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>عرض عباية فاخرة</h3>
+            <p>عباية ملكية بتطريز ذهبي تناسب المناسبات الخاصة.</p>
+            <div class="card-footer">
+              <span class="price">230 د.ل</span>
+              <button class="btn-small">إضافة إلى السلة</button>
+            </div>
+          </article>
+        </div>
       </div>
-      <div class="rt-contact-card">
-        <h3>موقع Royal Touch</h3>
-        <p>متجر إلكتروني متخصص في الملابس النسائية بتنسيقات ملكية.</p>
-        <p>ألوان الهوية: زهري &amp; ذهبي.</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- فوتر -->
-  <footer class="rt-footer">
-    <div class="rt-container rt-footer-inner">
-      <p>جميع الحقوق محفوظة &copy; Royal Touch Shop</p>
-      <p>بُني بكل ❤️ لخدمة عملائنا</p>
-    </div>
-  </footer>
+    <!-- ===== قسم المنتجات ===== -->
+    <section id="products" class="section section-soft">
+      <div class="container">
+        <div class="section-header">
+          <h2>المنتجات</h2>
+          <p>اختاري القطعة والقياس والكمية ثم أضيفيها إلى السلة.</p>
+        </div>
 
-  <!-- سكربت التعامل مع السلة والواتساب -->
-  <script>
-    // قائمة منتجات تجريبية - تقدر تعدلها براحتك
-    const products = [
-      {
-        id: 1,
-        name: "فستان ملكي زهري",
-        price: 150,
-        sizes: ["S", "M", "L", "XL"],
-        image: "https://via.placeholder.com/300x350?text=Royal+Dress"
-      },
-      {
-        id: 2,
-        name: "عباية راقية",
-        price: 200,
-        sizes: ["M", "L", "XL"],
-        image: "https://via.placeholder.com/300x350?text=Abaya"
-      },
-      {
-        id: 3,
-        name: "طقم نسائي عصري",
-        price: 180,
-        sizes: ["S", "M", "L"],
-        image: "https://via.placeholder.com/300x350?text=Set"
-      }
-    ];
-
-    let cart = [];
-
-    function scrollToProducts() {
-      document.getElementById("products").scrollIntoView({ behavior: "smooth" });
-    }
-
-    function renderProducts() {
-      const grid = document.getElementById("products-grid");
-      grid.innerHTML = "";
-
-      products.forEach((product) => {
-        const card = document.createElement("div");
-        card.className = "rt-product-card";
-        card.innerHTML = `
-          <div class="rt-product-image">
-            <img src="${product.image}" alt="${product.name}">
-          </div>
-          <div class="rt-product-body">
-            <h3 class="rt-product-title">${product.name}</h3>
-            <p class="rt-product-price">${product.price} <span class="rt-currency">د.ل</span></p>
-            <div class="rt-product-controls">
+        <div class="cards-grid">
+          <!-- منتج 1 -->
+          <article class="card product-card">
+            <h3>فستان ملكي زهري</h3>
+            <p>فستان ناعم بلون زهري يناسب الحفلات والمناسبات الخاصة.</p>
+            <div class="product-options">
               <label>
-                المقاس:
-                <select id="size-${product.id}">
-                  ${product.sizes
-                    .map((s) => `<option value="${s}">${s}</option>`)
-                    .join("")}
+                المقاس
+                <select>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
                 </select>
               </label>
               <label>
-                الكمية:
-                <input id="qty-${product.id}" type="number" min="1" value="1">
+                الكمية
+                <input type="number" min="1" value="1" />
               </label>
             </div>
-            <button class="rt-btn rt-btn-secondary rt-btn-block"
-              onclick="addToCart(${product.id})">
-              أضف إلى السلة
-            </button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function addToCart(productId) {
-      const product = products.find((p) => p.id === productId);
-      if (!product) return;
-
-      const sizeSelect = document.getElementById("size-" + productId);
-      const qtyInput = document.getElementById("qty-" + productId);
-      const size = sizeSelect.value;
-      const quantity = parseInt(qtyInput.value) || 1;
-
-      const key = productId + "-" + size;
-      const existing = cart.find((item) => item.key === key);
-
-      if (existing) {
-        existing.quantity += quantity;
-      } else {
-        cart.push({
-          key,
-          productId,
-          name: product.name,
-          price: product.price,
-          size,
-          quantity
-        });
-      }
-
-      renderCart();
-    }
-
-    function removeFromCart(key) {
-      cart = cart.filter((item) => item.key !== key);
-      renderCart();
-    }
-
-    function clearCart() {
-      cart = [];
-      renderCart();
-    }
-
-    function renderCart() {
-      const list = document.getElementById("cart-items-list");
-      const emptyMsg = document.getElementById("empty-cart");
-      const cartCount = document.getElementById("cart-count");
-      const cartTotal = document.getElementById("cart-total");
-
-      list.innerHTML = "";
-
-      if (cart.length === 0) {
-        emptyMsg.style.display = "block";
-        cartCount.textContent = "0";
-        cartTotal.textContent = "0";
-        return;
-      } else {
-        emptyMsg.style.display = "none";
-      }
-
-      let totalCount = 0;
-      let totalAmount = 0;
-
-      cart.forEach((item) => {
-        totalCount += item.quantity;
-        totalAmount += item.quantity * item.price;
-
-        const li = document.createElement("li");
-        li.className = "rt-cart-item";
-        li.innerHTML = `
-          <div>
-            <strong>${item.name}</strong>
-            <div class="rt-cart-item-meta">
-              مقاس: ${item.size} | كمية: ${item.quantity}
+            <div class="card-footer">
+              <span class="price">150 د.ل</span>
+              <button class="btn-small">إضافة إلى السلة</button>
             </div>
-          </div>
-          <div class="rt-cart-item-actions">
-            <span>${item.quantity * item.price} <span class="rt-currency">د.ل</span></span>
-            <button class="rt-cart-remove" onclick="removeFromCart('${item.key}')">
-              حذف
-            </button>
-          </div>
-        `;
-        list.appendChild(li);
-      });
+          </article>
 
-      cartCount.textContent = totalCount;
-      cartTotal.textContent = totalAmount;
-    }
+          <!-- منتج 2 -->
+          <article class="card product-card">
+            <h3>عباية راقية</h3>
+            <p>عباية عملية وفخمة بتفاصيل بسيطة تناسب الإطلالات اليومية.</p>
+            <div class="product-options">
+              <label>
+                المقاس
+                <select>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
+                </select>
+              </label>
+              <label>
+                الكمية
+                <input type="number" min="1" value="1" />
+              </label>
+            </div>
+            <div class="card-footer">
+              <span class="price">180 د.ل</span>
+              <button class="btn-small">إضافة إلى السلة</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-    function sendOrderOnWhatsApp() {
-      if (cart.length === 0) {
-        alert("السلة فارغة، أضف منتجًا واحدًا على الأقل.");
-        return;
-      }
+    <!-- ===== قسم السلة (مبدئي بسيط) ===== -->
+    <section id="cart" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>السلة</h2>
+          <p>سيتم هنا لاحقًا عرض المنتجات التي تم إضافتها إلى السلة.</p>
+        </div>
+        <div class="empty-cart">
+          <p>السلة فارغة حاليًا.</p>
+        </div>
+      </div>
+    </section>
 
-      let message = "طلب جديد من موقع Royal Touch:%0A%0A";
+    <!-- ===== قسم التواصل ===== -->
+    <section id="contact" class="section section-soft">
+      <div class="container">
+        <div class="section-header">
+          <h2>تواصل معنا</h2>
+          <p>للأسئلة والطلبات يمكنك التواصل معنا مباشرة عبر واتساب الأعمال.</p>
+        </div>
 
-      cart.forEach((item, index) => {
-        message += `${index + 1}- ${item.name} | مقاس: ${item.size} | كمية: ${
-          item.quantity
-        } | السعر: ${item.price} د.ل%0A`;
-      });
+        <div class="contact-box">
+          <p>واتساب الأعمال:</p>
+          <a href="https://wa.me/218917040244" target="_blank" class="btn-primary">
+            تواصل عبر واتساب 0917040244
+          </a>
+          <p class="contact-note">
+            يمكن استخدام رقم الواتساب لاستقبال إشعارات الطلبات يدويًا (سنربط الإشعارات آليًا لاحقًا عند
+            وجود باك إند).
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-      let totalAmount = cart.reduce(
-        (sum, item) => sum + item.quantity * item.price,
-        0
-      );
+  <!-- ===== الفوتر ===== -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>جميع الحقوق محفوظة &copy; <span>Royal Touch</span></p>
+      <p class="footer-sub">
+        تصميم بلمسة زهرية وذهبية تناسب هوية متجر اللمسة الملكية.
+      </p>
+    </div>
+  </footer>
 
-      message += `%0Aالمجموع الكلي: ${totalAmount} د.ل%0A`;
-      message += "%0Aالرجاء تأكيد الطلب.";
+  <!-- سكربت بسيط لفتح/إغلاق قائمة الجوال -->
+  <script>
+    const toggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
 
-      // رقم الواتساب: +218 91 7040244 (عدّل لو الدولة مختلفة)
-      const phone = "218917040244";
-      const url = `https://wa.me/${phone}?text=${message}`;
-
-      window.open(url, "_blank");
-    }
-
-    // تشغيل عند تحميل الصفحة
-    document.addEventListener("DOMContentLoaded", () => {
-      renderProducts();
-      renderCart();
+    toggle.addEventListener('click', () => {
+      mobileNav.classList.toggle('open');
     });
   </script>
 </body>
