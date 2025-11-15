@@ -1,38 +1,336 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Royal Touch Shop</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Royal Touch Shop</title>
+
+  <!-- خط جميل عربي -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- ملف التنسيقات -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- شريط علوي -->
+  <header class="rt-header">
+    <div class="rt-container rt-header-inner">
+      <!-- اللوجو: تقدر تغيّره لصورة لاحقًا -->
+      <div class="rt-logo">
+        <!-- لو عندك صورة لوجو استبدل السطرين تحت بصورة:
+        <img src="logo.png" alt="Royal Touch Logo">
+        -->
+        <span class="rt-logo-mark">RT</span>
+        <span class="rt-logo-text">Royal Touch</span>
+      </div>
 
-    <header>
+      <nav class="rt-nav">
+        <a href="#hero">الرئيسية</a>
+        <a href="#products">المنتجات</a>
+        <a href="#cart">السلة</a>
+        <a href="#contact">تواصل</a>
+        <a href="admin.html" class="rt-nav-admin">دخول الأدمن</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- هيدر رئيسي -->
+  <section id="hero" class="rt-hero">
+    <div class="rt-container rt-hero-inner">
+      <div class="rt-hero-text">
         <h1>Royal Touch Shop</h1>
-        <nav>
-            <a href="index.html">الرئيسية</a>
-            <a href="#products">المنتجات</a>
-            <a href="#contact">تواصل معنا</a>
-            <a href="admin.html">تسجيل دخول الأدمن</a>
-        </nav>
-    </header>
+        <p>
+          متجر اللمسة الملكية لبيع الملابس النسائية الفخمة بلمسة عصرية،
+          ألواننا الرئيسية زهري وذهبي ✨
+        </p>
+        <button class="rt-btn rt-btn-primary" onclick="scrollToProducts()">
+          تسوق الآن
+        </button>
+      </div>
+      <div class="rt-hero-badge">
+        <span>عرض خاص</span>
+        <p>خصومات على مجموعة من القطع المميزة</p>
+      </div>
+    </div>
+  </section>
 
-    <section id="hero">
-        <h2>أهلاً بك في متجر Royal Touch</h2>
-        <p>أفضل المنتجات بين يديك 🛍️</p>
-    </section>
+  <!-- قسم المنتجات -->
+  <section id="products" class="rt-section">
+    <div class="rt-container">
+      <h2 class="rt-section-title">المنتجات</h2>
+      <p class="rt-section-subtitle">اختاري القطعة والقياس ثم أضيفيها إلى السلة</p>
 
-    <section id="products">
-        <h2>منتجاتنا</h2>
-        <div class="product-list" id="productList"></div>
-    </section>
+      <div id="products-grid" class="rt-products-grid">
+        <!-- يتم تعبئتها من JavaScript -->
+      </div>
+    </div>
+  </section>
 
-    <section id="contact">
-        <h2>تواصل معنا</h2>
-        <p>واتساب: 90000000</p>
-    </section>
+  <!-- قسم السلة -->
+  <section id="cart" class="rt-section rt-section-alt">
+    <div class="rt-container">
+      <h2 class="rt-section-title">سلة المشتريات</h2>
+      <p class="rt-section-subtitle">راجعي طلبك قبل الإرسال على الواتساب</p>
 
-    <script src="main.js"></script>
+      <div class="rt-cart-layout">
+        <div class="rt-cart-items">
+          <ul id="cart-items-list" class="rt-cart-list">
+            <!-- العناصر من JavaScript -->
+          </ul>
+          <p id="empty-cart" class="rt-cart-empty">السلة فارغة حاليًا.</p>
+        </div>
+
+        <div class="rt-cart-summary">
+          <div class="rt-cart-row">
+            <span>إجمالي القطع:</span>
+            <span id="cart-count">0</span>
+          </div>
+          <div class="rt-cart-row">
+            <span>المجموع الكلي:</span>
+            <span id="cart-total">0</span>
+            <span class="rt-currency">د.ل</span>
+          </div>
+          <button class="rt-btn rt-btn-primary rt-btn-block" onclick="sendOrderOnWhatsApp()">
+            إرسال الطلب على الواتساب
+          </button>
+          <button class="rt-btn rt-btn-ghost rt-btn-block" onclick="clearCart()">
+            تفريغ السلة
+          </button>
+          <small class="rt-note">
+            سيتم فتح واتساب مع رسالة جاهزة تحتوي على تفاصيل الطلب، فقط تأكد من إرسالها.
+          </small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- قسم تواصل -->
+  <section id="contact" class="rt-section">
+    <div class="rt-container rt-contact-grid">
+      <div>
+        <h2 class="rt-section-title">تواصل معنا</h2>
+        <p class="rt-section-subtitle">
+          لأي استفسار أو طلب خاص يمكنك التواصل معنا على الواتساب أعمال.
+        </p>
+        <ul class="rt-contact-list">
+          <li><strong>واتساب أعمال:</strong> 0917040244</li>
+          <li><strong>أوقات العمل:</strong> من 10 صباحًا حتى 10 مساءً</li>
+        </ul>
+        <a
+          class="rt-btn rt-btn-secondary"
+          href="https://wa.me/218917040244"
+          target="_blank"
+          rel="noopener"
+        >
+          تواصل واتساب مباشر
+        </a>
+      </div>
+      <div class="rt-contact-card">
+        <h3>موقع Royal Touch</h3>
+        <p>متجر إلكتروني متخصص في الملابس النسائية بتنسيقات ملكية.</p>
+        <p>ألوان الهوية: زهري &amp; ذهبي.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- فوتر -->
+  <footer class="rt-footer">
+    <div class="rt-container rt-footer-inner">
+      <p>جميع الحقوق محفوظة &copy; Royal Touch Shop</p>
+      <p>بُني بكل ❤️ لخدمة عملائنا</p>
+    </div>
+  </footer>
+
+  <!-- سكربت التعامل مع السلة والواتساب -->
+  <script>
+    // قائمة منتجات تجريبية - تقدر تعدلها براحتك
+    const products = [
+      {
+        id: 1,
+        name: "فستان ملكي زهري",
+        price: 150,
+        sizes: ["S", "M", "L", "XL"],
+        image: "https://via.placeholder.com/300x350?text=Royal+Dress"
+      },
+      {
+        id: 2,
+        name: "عباية راقية",
+        price: 200,
+        sizes: ["M", "L", "XL"],
+        image: "https://via.placeholder.com/300x350?text=Abaya"
+      },
+      {
+        id: 3,
+        name: "طقم نسائي عصري",
+        price: 180,
+        sizes: ["S", "M", "L"],
+        image: "https://via.placeholder.com/300x350?text=Set"
+      }
+    ];
+
+    let cart = [];
+
+    function scrollToProducts() {
+      document.getElementById("products").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById("products-grid");
+      grid.innerHTML = "";
+
+      products.forEach((product) => {
+        const card = document.createElement("div");
+        card.className = "rt-product-card";
+        card.innerHTML = `
+          <div class="rt-product-image">
+            <img src="${product.image}" alt="${product.name}">
+          </div>
+          <div class="rt-product-body">
+            <h3 class="rt-product-title">${product.name}</h3>
+            <p class="rt-product-price">${product.price} <span class="rt-currency">د.ل</span></p>
+            <div class="rt-product-controls">
+              <label>
+                المقاس:
+                <select id="size-${product.id}">
+                  ${product.sizes
+                    .map((s) => `<option value="${s}">${s}</option>`)
+                    .join("")}
+                </select>
+              </label>
+              <label>
+                الكمية:
+                <input id="qty-${product.id}" type="number" min="1" value="1">
+              </label>
+            </div>
+            <button class="rt-btn rt-btn-secondary rt-btn-block"
+              onclick="addToCart(${product.id})">
+              أضف إلى السلة
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function addToCart(productId) {
+      const product = products.find((p) => p.id === productId);
+      if (!product) return;
+
+      const sizeSelect = document.getElementById("size-" + productId);
+      const qtyInput = document.getElementById("qty-" + productId);
+      const size = sizeSelect.value;
+      const quantity = parseInt(qtyInput.value) || 1;
+
+      const key = productId + "-" + size;
+      const existing = cart.find((item) => item.key === key);
+
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({
+          key,
+          productId,
+          name: product.name,
+          price: product.price,
+          size,
+          quantity
+        });
+      }
+
+      renderCart();
+    }
+
+    function removeFromCart(key) {
+      cart = cart.filter((item) => item.key !== key);
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCart();
+    }
+
+    function renderCart() {
+      const list = document.getElementById("cart-items-list");
+      const emptyMsg = document.getElementById("empty-cart");
+      const cartCount = document.getElementById("cart-count");
+      const cartTotal = document.getElementById("cart-total");
+
+      list.innerHTML = "";
+
+      if (cart.length === 0) {
+        emptyMsg.style.display = "block";
+        cartCount.textContent = "0";
+        cartTotal.textContent = "0";
+        return;
+      } else {
+        emptyMsg.style.display = "none";
+      }
+
+      let totalCount = 0;
+      let totalAmount = 0;
+
+      cart.forEach((item) => {
+        totalCount += item.quantity;
+        totalAmount += item.quantity * item.price;
+
+        const li = document.createElement("li");
+        li.className = "rt-cart-item";
+        li.innerHTML = `
+          <div>
+            <strong>${item.name}</strong>
+            <div class="rt-cart-item-meta">
+              مقاس: ${item.size} | كمية: ${item.quantity}
+            </div>
+          </div>
+          <div class="rt-cart-item-actions">
+            <span>${item.quantity * item.price} <span class="rt-currency">د.ل</span></span>
+            <button class="rt-cart-remove" onclick="removeFromCart('${item.key}')">
+              حذف
+            </button>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+
+      cartCount.textContent = totalCount;
+      cartTotal.textContent = totalAmount;
+    }
+
+    function sendOrderOnWhatsApp() {
+      if (cart.length === 0) {
+        alert("السلة فارغة، أضف منتجًا واحدًا على الأقل.");
+        return;
+      }
+
+      let message = "طلب جديد من موقع Royal Touch:%0A%0A";
+
+      cart.forEach((item, index) => {
+        message += `${index + 1}- ${item.name} | مقاس: ${item.size} | كمية: ${
+          item.quantity
+        } | السعر: ${item.price} د.ل%0A`;
+      });
+
+      let totalAmount = cart.reduce(
+        (sum, item) => sum + item.quantity * item.price,
+        0
+      );
+
+      message += `%0Aالمجموع الكلي: ${totalAmount} د.ل%0A`;
+      message += "%0Aالرجاء تأكيد الطلب.";
+
+      // رقم الواتساب: +218 91 7040244 (عدّل لو الدولة مختلفة)
+      const phone = "218917040244";
+      const url = `https://wa.me/${phone}?text=${message}`;
+
+      window.open(url, "_blank");
+    }
+
+    // تشغيل عند تحميل الصفحة
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProducts();
+      renderCart();
+    });
+  </script>
 </body>
 </html>
