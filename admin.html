@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الأدمن</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>لوحة تحكم الأدمن</h1>
+</header>
+
+<section>
+    <h2>إضافة منتج جديد</h2>
+
+    <label>اسم المنتج:</label>
+    <input type="text" id="productName">
+
+    <label>السعر:</label>
+    <input type="number" id="productPrice">
+
+    <label>الصورة (رابط URL):</label>
+    <input type="text" id="productImage">
+
+    <button onclick="addProduct()">إضافة المنتج</button>
+</section>
+
+<section>
+    <h2>المنتجات الحالية</h2>
+    <div id="productsList"></div>
+</section>
+
+<footer>
+    <p>© 2025 Royal Touch Shop</p>
+</footer>
+
+<script>
+function addProduct() {
+    alert("✔ تمت إضافة المنتج (هذا مثال فقط، سنربطه بقاعدة بيانات لاحقاً)");
+}
+</script>
+
+</body>
+</html>
