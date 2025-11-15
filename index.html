@@ -2,217 +2,294 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Royal Touch Shop - متجر اللمسة الملكية</title>
+
+  <!-- خط جميل عربي -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap"
+    rel="stylesheet"
+  />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- ===== الهيدر / الشعار + القائمة ===== -->
+  <!-- ========= الهيدر / الشعار ========= -->
   <header class="site-header">
-    <div class="container header-content">
+    <div class="container header-inner">
+
+      <!-- زر القائمة للجوال -->
+      <button class="menu-toggle" aria-label="فتح القائمة">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
       <!-- الشعار -->
-      <a href="#home" class="brand">
-        <!-- تأكّد أن الصورة موجودة باسم logo-royal-touch.png في نفس المجلد -->
-        <img src="logo-royal-touch.png" alt="Royal Touch Logo" class="brand-logo" />
+      <a href="#hero" class="brand">
+        <img src="logo-royal-touch.png" alt="Royal Touch logo" class="brand-logo" />
         <div class="brand-text">
-          <span class="brand-name-en">Royal Touch</span>
-          <span class="brand-name-ar">متجر اللمسة الملكية</span>
+          <span class="brand-name">Royal Touch</span>
+          <span class="brand-tagline">متجر اللمسة الملكية</span>
         </div>
       </a>
 
-      <!-- قائمة الروابط -->
+      <!-- القائمة الرئيسية -->
       <nav class="main-nav">
-        <a href="#home">الرئيسية</a>
+        <a href="#hero">الرئيسية</a>
+        <a href="#offers">العروض الخاصة</a>
         <a href="#products">المنتجات</a>
-        <a href="#offers">العروض</a>
         <a href="#contact">تواصل معنا</a>
-        <a href="#cart" class="nav-badge">
-          السلة
-          <span class="cart-count">0</span>
-        </a>
-        <a href="admin.html" class="admin-btn">دخول الإدارة</a>
       </nav>
 
-      <!-- زر القائمة للجوال -->
-      <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">
-        ☰
-      </button>
+      <!-- دخول الإدارة -->
+      <a href="admin.html" class="admin-link">دخول الإدارة</a>
     </div>
   </header>
 
-  <!-- قائمة الجوال -->
-  <nav class="mobile-nav" id="mobileNav">
-    <a href="#home">الرئيسية</a>
-    <a href="#products">المنتجات</a>
-    <a href="#offers">العروض</a>
-    <a href="#contact">تواصل معنا</a>
-    <a href="#cart">السلة</a>
-    <a href="admin.html">دخول الإدارة</a>
-  </nav>
+  <main>
 
-  <!-- ===== الهيرو / القسم الرئيسي ===== -->
-  <main id="home">
-    <section class="hero-section">
-      <div class="container hero-content">
-        <div class="hero-text">
-          <h1>مرحبًا بك في عالم الأناقة</h1>
+    <!-- ========= الهيرو ========= -->
+    <section id="hero" class="hero">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <h1>مرحباً بك في عالم الأناقة</h1>
           <p>
-            متجر اللمسة الملكية لبيع الملابس النسائية الفخمة بلمسة عصرية،
-            ألواننا الأساسية زهرية وذهبية تعكس الفخامة والرقي.
+            متجر اللمسة الملكية لبيع الملابس النسائية الفخمة بلمسة عصرية.
+            ألواننا الأساسية زهرية وذهبية تعكس الفخامة والرقي ✨
           </p>
+
           <div class="hero-actions">
-            <a href="#products" class="btn-primary">تسوقي الآن</a>
-            <a href="#offers" class="btn-ghost">شاهدي العروض الخاصة</a>
+            <a href="#products" class="btn btn-primary">تسوّقي الآن</a>
+            <a href="#offers" class="btn btn-outline">شاهدي العروض الخاصة</a>
           </div>
+        </div>
+
+        <div class="hero-badge">
+          <span>لمسة ملكية</span>
+          <span>خدمة واتساب للأعمال</span>
         </div>
       </div>
     </section>
 
-    <!-- ===== قسم العروض ===== -->
+    <!-- ========= العروض الخاصة ========= -->
     <section id="offers" class="section">
       <div class="container">
         <div class="section-header">
           <h2>العروض الخاصة ✨</h2>
-          <p>خصومات على مجموعة من القطع المميزة لفترة محدودة.</p>
+          <p>خصومات على مجموعة من القطع المميّزة لفترة محدودة.</p>
         </div>
 
         <div class="cards-grid">
-          <article class="card">
-            <h3>عرض فستان ملكي زهري</h3>
-            <p>فستان سهرة بلون زهري فاخر مع تفاصيل ذهبية ناعمة.</p>
-            <div class="card-footer">
-              <span class="price">150 د.ل</span>
-              <button class="btn-small">إضافة إلى السلة</button>
+          <!-- كرت عرض خاص تجريبي -->
+          <article class="card offer-card">
+            <div class="card-image">
+              <!-- يمكنك تغيير مسار الصورة لاحقاً -->
+              <img src="https://via.placeholder.com/600x400/ffd6e8/7b2240?text=Royal+Dress" alt="فستان ملكي زهري" />
             </div>
-          </article>
-
-          <article class="card">
-            <h3>عرض عباية فاخرة</h3>
-            <p>عباية ملكية بتطريز ذهبي تناسب المناسبات الخاصة.</p>
-            <div class="card-footer">
-              <span class="price">230 د.ل</span>
-              <button class="btn-small">إضافة إلى السلة</button>
+            <div class="card-body">
+              <h3 class="card-title">عرض فستان ملكي زهري</h3>
+              <p class="card-text">
+                فستان سهرة بلون زهري فاخر مع تفاصيل ذهبية ناعمة. مثالي للمناسبات الخاصة
+                وحفلات الخطوبة.
+              </p>
+              <div class="card-meta">
+                <span class="price">150 د.ل</span>
+                <span class="badge badge-offer">خصم لفترة محدودة</span>
+              </div>
+              <div class="card-actions">
+                <button class="btn btn-primary" data-whatsapp="عرض فستان ملكي زهري">
+                  طلب عبر واتساب
+                </button>
+              </div>
             </div>
           </article>
         </div>
+
       </div>
     </section>
 
-    <!-- ===== قسم المنتجات ===== -->
-    <section id="products" class="section section-soft">
+    <!-- ========= قائمة المنتجات ========= -->
+    <section id="products" class="section section-light">
       <div class="container">
         <div class="section-header">
           <h2>المنتجات</h2>
-          <p>اختاري القطعة والقياس والكمية ثم أضيفيها إلى السلة.</p>
+          <p>اختاري القطعة والمقاس والكمية، ثم أرسلي طلبك عبر واتساب.</p>
         </div>
 
         <div class="cards-grid">
+
           <!-- منتج 1 -->
           <article class="card product-card">
-            <h3>فستان ملكي زهري</h3>
-            <p>فستان ناعم بلون زهري يناسب الحفلات والمناسبات الخاصة.</p>
-            <div class="product-options">
-              <label>
-                المقاس
-                <select>
-                  <option>S</option>
-                  <option>M</option>
-                  <option>L</option>
-                  <option>XL</option>
-                </select>
-              </label>
-              <label>
-                الكمية
-                <input type="number" min="1" value="1" />
-              </label>
+            <div class="card-image">
+              <img src="https://via.placeholder.com/600x400/fde2ef/7b2240?text=Pink+Abaya" alt="عباية راقية" />
             </div>
-            <div class="card-footer">
-              <span class="price">150 د.ل</span>
-              <button class="btn-small">إضافة إلى السلة</button>
+            <div class="card-body">
+              <h3 class="card-title">عباية راقية</h3>
+              <p class="card-text">
+                عباية عملية بلون زهري ناعم بتفاصيل ذهبية بسيطة تناسب الإطلالات اليومية.
+              </p>
+
+              <div class="product-options">
+                <label>
+                  المقاس
+                  <select class="size-select">
+                    <option value="S">صغير (S)</option>
+                    <option value="M" selected>متوسط (M)</option>
+                    <option value="L">كبير (L)</option>
+                    <option value="XL">كبير جداً (XL)</option>
+                  </select>
+                </label>
+
+                <label>
+                  الكمية
+                  <input type="number" class="qty-input" min="1" value="1" />
+                </label>
+              </div>
+
+              <div class="card-meta">
+                <span class="price">120 د.ل</span>
+              </div>
+
+              <div class="card-actions">
+                <button class="btn btn-primary send-whatsapp"
+                        data-product="عباية راقية">
+                  طلب عبر واتساب
+                </button>
+              </div>
             </div>
           </article>
 
-          <!-- منتج 2 -->
+          <!-- منتج 2 (مثال إضافي) -->
           <article class="card product-card">
-            <h3>عباية راقية</h3>
-            <p>عباية عملية وفخمة بتفاصيل بسيطة تناسب الإطلالات اليومية.</p>
-            <div class="product-options">
-              <label>
-                المقاس
-                <select>
-                  <option>S</option>
-                  <option>M</option>
-                  <option>L</option>
-                  <option>XL</option>
-                </select>
-              </label>
-              <label>
-                الكمية
-                <input type="number" min="1" value="1" />
-              </label>
+            <div class="card-image">
+              <img src="https://via.placeholder.com/600x400/ffe2ea/7b2240?text=Kids+Dress" alt="فستان بناتي" />
             </div>
-            <div class="card-footer">
-              <span class="price">180 د.ل</span>
-              <button class="btn-small">إضافة إلى السلة</button>
+            <div class="card-body">
+              <h3 class="card-title">فستان بناتي ناعم</h3>
+              <p class="card-text">
+                فستان بناتي بلون زهري مبهج، مناسب للمناسبات والزيارات العائلية.
+              </p>
+
+              <div class="product-options">
+                <label>
+                  المقاس
+                  <select class="size-select">
+                    <option value="2-3">2-3 سنوات</option>
+                    <option value="4-5" selected>4-5 سنوات</option>
+                    <option value="6-7">6-7 سنوات</option>
+                  </select>
+                </label>
+
+                <label>
+                  الكمية
+                  <input type="number" class="qty-input" min="1" value="1" />
+                </label>
+              </div>
+
+              <div class="card-meta">
+                <span class="price">90 د.ل</span>
+              </div>
+
+              <div class="card-actions">
+                <button class="btn btn-primary send-whatsapp"
+                        data-product="فستان بناتي ناعم">
+                  طلب عبر واتساب
+                </button>
+              </div>
             </div>
           </article>
+
         </div>
       </div>
     </section>
 
-    <!-- ===== قسم السلة (مبدئي بسيط) ===== -->
-    <section id="cart" class="section">
-      <div class="container">
-        <div class="section-header">
-          <h2>السلة</h2>
-          <p>سيتم هنا لاحقًا عرض المنتجات التي تم إضافتها إلى السلة.</p>
-        </div>
-        <div class="empty-cart">
-          <p>السلة فارغة حاليًا.</p>
-        </div>
-      </div>
-    </section>
+    <!-- ========= تواصل معنا ========= -->
+    <section id="contact" class="section">
+      <div class="container contact-grid">
+        <div>
+          <div class="section-header">
+            <h2>تواصل معنا</h2>
+            <p>للطلبات والاستفسارات يمكنك التواصل مباشرة عبر واتساب الأعمال.</p>
+          </div>
 
-    <!-- ===== قسم التواصل ===== -->
-    <section id="contact" class="section section-soft">
-      <div class="container">
-        <div class="section-header">
-          <h2>تواصل معنا</h2>
-          <p>للأسئلة والطلبات يمكنك التواصل معنا مباشرة عبر واتساب الأعمال.</p>
-        </div>
+          <ul class="contact-list">
+            <li><strong>واتساب الأعمال:</strong> ‎0917040244</li>
+            <li><strong>الموقع:</strong> ليبيا – متجر للملابس النسائية والأطفال</li>
+          </ul>
 
-        <div class="contact-box">
-          <p>واتساب الأعمال:</p>
-          <a href="https://wa.me/218917040244" target="_blank" class="btn-primary">
-            تواصل عبر واتساب 0917040244
+          <a
+            href="https://wa.me/2180917040244?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D8%B1%D9%88%D9%8A%D8%A7%D9%84%20%D8%AA%D8%A7%D8%AA%D8%B4"
+            target="_blank"
+            class="btn btn-primary"
+          >
+            تواصل عبر واتساب
           </a>
-          <p class="contact-note">
-            يمكن استخدام رقم الواتساب لاستقبال إشعارات الطلبات يدويًا (سنربط الإشعارات آليًا لاحقًا عند
-            وجود باك إند).
-          </p>
         </div>
       </div>
     </section>
+
   </main>
 
-  <!-- ===== الفوتر ===== -->
+  <!-- ========= الفوتر ========= -->
   <footer class="site-footer">
-    <div class="container footer-content">
-      <p>جميع الحقوق محفوظة &copy; <span>Royal Touch</span></p>
-      <p class="footer-sub">
-        تصميم بلمسة زهرية وذهبية تناسب هوية متجر اللمسة الملكية.
-      </p>
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> Royal Touch – متجر اللمسة الملكية.</p>
+      <p class="footer-note">تصميم وردي ذهبي يعكس هوية العلامة.</p>
     </div>
   </footer>
 
-  <!-- سكربت بسيط لفتح/إغلاق قائمة الجوال -->
+  <!-- ========= سكربت بسيط للقائمة وواتساب ========= -->
   <script>
-    const toggle = document.getElementById('menuToggle');
-    const mobileNav = document.getElementById('mobileNav');
+    // سنة الفوتر
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    toggle.addEventListener('click', () => {
-      mobileNav.classList.toggle('open');
+    // فتح/إغلاق القائمة في الجوال
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mainNav = document.querySelector(".main-nav");
+
+    menuToggle.addEventListener("click", () => {
+      mainNav.classList.toggle("nav-open");
+      menuToggle.classList.toggle("open");
+    });
+
+    // رقم واتساب (بدون + وبدون مسافات)
+    const whatsappNumber = "0917040244"; // ليبيا
+
+    function sendWhatsappOrder(productName, size, qty) {
+      const message =
+        "مرحبا، أود طلب المنتج التالي:%0A" +
+        "- الاسم: " + productName + "%0A" +
+        "- المقاس: " + size + "%0A" +
+        "- الكمية: " + qty + "%0A%0A" +
+        "تم الإرسال من موقع Royal Touch.";
+      const url = "https://wa.me/218" + whatsappNumber + "?text=" + message;
+      window.open(url, "_blank");
+    }
+
+    // ربط أزرار الطلب عبر واتساب بالمنتجات
+    document.querySelectorAll(".product-card").forEach((card) => {
+      const btn = card.querySelector(".send-whatsapp");
+      const sizeSelect = card.querySelector(".size-select");
+      const qtyInput = card.querySelector(".qty-input");
+
+      btn.addEventListener("click", () => {
+        const productName = btn.dataset.product;
+        const size = sizeSelect.value;
+        const qty = qtyInput.value || 1;
+        sendWhatsappOrder(productName, size, qty);
+      });
+    });
+
+    // زر العرض الخاص (بدون مقاس/كمية)
+    document.querySelectorAll("[data-whatsapp]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const productName = btn.dataset.whatsapp;
+        sendWhatsappOrder(productName, "-", 1);
+      });
     });
   </script>
 </body>
