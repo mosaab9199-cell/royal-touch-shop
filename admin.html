@@ -2,1546 +2,732 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>لوحة تحكم Royal Touch</title>
+  <title>لوحة التحكم - Royal Touch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- ملف التنسيق العام للموقع -->
+  <!-- خط جميل -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- ملف الستايل العام للموقع -->
   <link rel="stylesheet" href="style.css" />
-
-  <style>
-    /* ألوان الهوية – زهري وذهبي */
-    :root {
-      --rt-pink: #f8a7c4;
-      --rt-pink-dark: #e46b9d;
-      --rt-gold: #f5c76d;
-      --rt-gold-dark: #c99b3a;
-      --rt-bg: #0f0f1a;
-      --rt-card: #181826;
-      --rt-text: #ffffff;
-      --rt-muted: #9ba0b8;
-      --rt-danger: #ff6b81;
-      --rt-success: #38c172;
-    }
-
-    body.admin-body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
-      background: radial-gradient(circle at top, #1f1024, #050510);
-      color: var(--rt-text);
-    }
-
-    /* ====== شاشة تسجيل الدخول ====== */
-    .admin-login-wrapper {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    .admin-login-card {
-      background: linear-gradient(135deg, #201428, #141424);
-      border-radius: 18px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
-      padding: 2rem 1.75rem;
-      width: 100%;
-      max-width: 420px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .admin-logo-box {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .admin-logo-box img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      border-radius: 999px;
-      border: 2px solid var(--rt-gold);
-      background: #1c1c2a;
-      padding: 6px;
-    }
-
-    .admin-logo-box h1 {
-      margin: 0.75rem 0 0.25rem;
-      font-size: 1.4rem;
-      letter-spacing: 1px;
-      color: var(--rt-gold);
-    }
-
-    .admin-logo-box p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: var(--rt-muted);
-    }
-
-    .admin-input-group {
-      margin-bottom: 1rem;
-    }
-
-    .admin-input-label {
-      display: block;
-      margin-bottom: 0.25rem;
-      font-size: 0.85rem;
-      color: var(--rt-muted);
-    }
-
-    .admin-input {
-      width: 100%;
-      padding: 0.6rem 0.75rem;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(4, 4, 20, 0.9);
-      color: var(--rt-text);
-      font-size: 0.95rem;
-      outline: none;
-      transition: 0.2s border, 0.2s box-shadow, 0.2s background;
-    }
-
-    .admin-input:focus {
-      border-color: var(--rt-pink);
-      box-shadow: 0 0 0 1px rgba(248, 167, 196, 0.4);
-      background: rgba(8, 8, 28, 0.95);
-    }
-
-    .admin-btn-main {
-      width: 100%;
-      padding: 0.7rem 0.75rem;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(135deg, var(--rt-pink), var(--rt-gold));
-      color: #190818;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 0.25rem;
-      transition: 0.2s transform, 0.2s box-shadow, 0.2s filter;
-    }
-
-    .admin-btn-main:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-      filter: brightness(1.05);
-    }
-
-    .admin-login-footer {
-      margin-top: 0.75rem;
-      font-size: 0.8rem;
-      text-align: center;
-      color: var(--rt-muted);
-    }
-
-    .admin-error,
-    .admin-success {
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      text-align: center;
-    }
-
-    .admin-error {
-      color: var(--rt-danger);
-    }
-
-    .admin-success {
-      color: var(--rt-success);
-    }
-
-    /* ====== لوحة التحكم ====== */
-    .admin-app.hidden {
-      display: none;
-    }
-
-    .admin-layout {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .admin-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.7rem 1rem;
-      background: linear-gradient(90deg, #1d1020, #111122);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .admin-top-left {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .admin-top-logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      object-fit: contain;
-      border: 2px solid var(--rt-pink);
-      background: #20142a;
-      padding: 3px;
-    }
-
-    .admin-top-title {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .admin-top-title span:first-child {
-      font-size: 0.9rem;
-      color: var(--rt-gold);
-      font-weight: 600;
-    }
-
-    .admin-top-title span:last-child {
-      font-size: 0.75rem;
-      color: var(--rt-muted);
-    }
-
-    .admin-top-right {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.85rem;
-      color: var(--rt-muted);
-    }
-
-    .admin-badge {
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      background: rgba(248, 167, 196, 0.12);
-      color: var(--rt-pink);
-      font-size: 0.75rem;
-    }
-
-    .admin-btn-outline {
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: transparent;
-      color: var(--rt-text);
-      padding: 0.35rem 0.75rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: 0.2s background, 0.2s border-color;
-    }
-
-    .admin-btn-outline:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: var(--rt-pink);
-    }
-
-    .admin-main {
-      flex: 1;
-      display: flex;
-      min-height: 0;
-    }
-
-    .admin-sidebar {
-      width: 230px;
-      background: radial-gradient(circle at top left, #301430, #0b0b16);
-      border-inline-end: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 0.75rem 0.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .admin-nav-title {
-      font-size: 0.8rem;
-      color: var(--rt-muted);
-      padding: 0 0.5rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .admin-nav-btn {
-      width: 100%;
-      text-align: right;
-      padding: 0.55rem 0.75rem;
-      border-radius: 999px;
-      border: none;
-      background: transparent;
-      color: var(--rt-text);
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      transition: 0.2s background, 0.2s transform;
-    }
-
-    .admin-nav-btn span {
-      font-size: 0.78rem;
-      color: var(--rt-muted);
-    }
-
-    .admin-nav-btn.active {
-      background: linear-gradient(90deg, rgba(248, 167, 196, 0.18), rgba(245, 199, 109, 0.18));
-      transform: translateX(-2px);
-      color: var(--rt-gold);
-    }
-
-    .admin-content {
-      flex: 1;
-      padding: 1rem 1.2rem 1.5rem;
-      overflow-y: auto;
-    }
-
-    .admin-section {
-      display: none;
-    }
-
-    .admin-section.active {
-      display: block;
-    }
-
-    .admin-section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .admin-section-header h2 {
-      margin: 0;
-      font-size: 1.05rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .admin-chip {
-      font-size: 0.7rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--rt-muted);
-    }
-
-    /* بطاقات الإحصائيات */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .stat-card {
-      background: radial-gradient(circle at top, #2b1632, #11111e);
-      border-radius: 14px;
-      padding: 0.8rem 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .stat-label {
-      font-size: 0.8rem;
-      color: var(--rt-muted);
-      margin-bottom: 0.1rem;
-    }
-
-    .stat-value {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--rt-gold);
-    }
-
-    .stat-sub {
-      font-size: 0.75rem;
-      color: var(--rt-pink);
-    }
-
-    /* جدول عام */
-    .admin-table-wrapper {
-      background: rgba(12, 12, 24, 0.98);
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      overflow-x: auto;
-    }
-
-    table.admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-    }
-
-    .admin-table th,
-    .admin-table td {
-      padding: 0.5rem 0.6rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    .admin-table th {
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--rt-muted);
-      font-weight: 500;
-    }
-
-    .admin-tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.18rem 0.5rem;
-      border-radius: 999px;
-      font-size: 0.7rem;
-    }
-
-    .tag-pending {
-      background: rgba(245, 199, 109, 0.16);
-      color: var(--rt-gold);
-    }
-
-    .tag-confirmed {
-      background: rgba(56, 193, 114, 0.18);
-      color: var(--rt-success);
-    }
-
-    .tag-delivered {
-      background: rgba(89, 196, 255, 0.18);
-      color: #8bd4ff;
-    }
-
-    .tag-cancelled {
-      background: rgba(255, 107, 129, 0.18);
-      color: var(--rt-danger);
-    }
-
-    .admin-btn-xs {
-      border-radius: 999px;
-      border: none;
-      padding: 0.25rem 0.45rem;
-      font-size: 0.7rem;
-      cursor: pointer;
-      margin-inline-start: 0.15rem;
-    }
-
-    .btn-xs-gold {
-      background: var(--rt-gold-dark);
-      color: #1a1010;
-    }
-
-    .btn-xs-pink {
-      background: var(--rt-pink-dark);
-      color: #fff;
-    }
-
-    .btn-xs-ghost {
-      background: transparent;
-      color: var(--rt-muted);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    /* فلاتر الطلبات */
-    .orders-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.6rem;
-      align-items: center;
-      font-size: 0.8rem;
-    }
-
-    .orders-filters select {
-      padding: 0.35rem 0.6rem;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(8, 8, 24, 0.95);
-      color: var(--rt-text);
-      font-size: 0.8rem;
-    }
-
-    .orders-filters button {
-      padding: 0.35rem 0.75rem;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(135deg, var(--rt-pink), var(--rt-gold));
-      font-size: 0.8rem;
-      cursor: pointer;
-      color: #200812;
-    }
-
-    .wa-hint {
-      font-size: 0.78rem;
-      color: var(--rt-muted);
-      margin-top: 0.3rem;
-    }
-
-    .wa-hint a {
-      color: var(--rt-gold);
-      text-decoration: underline;
-    }
-
-    /* إدارة المنتجات */
-    .products-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1.1fr);
-      gap: 0.8rem;
-    }
-
-    .admin-card {
-      background: rgba(10, 10, 24, 0.98);
-      border-radius: 14px;
-      padding: 0.75rem 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .admin-card h3 {
-      margin: 0 0 0.5rem;
-      font-size: 0.95rem;
-    }
-
-    .admin-small {
-      font-size: 0.72rem;
-      color: var(--rt-muted);
-    }
-
-    .admin-form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.5rem;
-    }
-
-    .admin-form-grid .full {
-      grid-column: 1 / -1;
-    }
-
-    .admin-checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      margin-top: 0.25rem;
-    }
-
-    textarea.admin-input {
-      min-height: 70px;
-      resize: vertical;
-    }
-
-    .admin-form-actions {
-      display: flex;
-      justify-content: flex-start;
-      gap: 0.4rem;
-      margin-top: 0.5rem;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--rt-pink), var(--rt-gold));
-      color: #1b0814;
-      border: none;
-      padding: 0.45rem 0.9rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      cursor: pointer;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--rt-muted);
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 0.45rem 0.9rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .btn-danger {
-      background: var(--rt-danger);
-      color: #fff;
-      border-radius: 999px;
-      border: none;
-      padding: 0.45rem 0.9rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    /* إعدادات الأدمن */
-    .settings-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 0.75rem;
-    }
-
-    @media (max-width: 800px) {
-      .admin-sidebar {
-        display: none;
-      }
-
-      .admin-main {
-        flex-direction: column;
-      }
-
-      .admin-content {
-        padding-inline: 0.8rem;
-      }
-
-      .products-layout {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-  </style>
 </head>
-
 <body class="admin-body">
-  <!-- ========= شاشة تسجيل الدخول ========= -->
-  <div id="adminLoginView" class="admin-login-wrapper">
-    <div class="admin-login-card">
-      <div class="admin-logo-box">
-        <!-- عدّل مسار الشعار حسب ملفك -->
-        <img src="logo.png" alt="Royal Touch Logo" />
-        <h1>لوحة تحكم Royal Touch</h1>
-        <p>تسجيل دخول الأدمن لإدارة الطلبات والعروض والمنتجات</p>
+
+  <!-- شاشة تسجيل الدخول -->
+  <div id="admin-login-screen" class="admin-login-screen">
+    <div class="admin-login-card glass-card">
+      <div class="admin-logo-wrap">
+        <img src="logo-royal-touch.png" alt="Royal Touch Logo" class="admin-logo-img" />
+        <h1 class="admin-login-title">لوحة تحكم Royal Touch</h1>
+        <p class="admin-login-subtitle">دخول المدير لإدارة المنتجات والعروض والطلبات</p>
       </div>
 
-      <div class="admin-input-group">
-        <label class="admin-input-label" for="loginUsername">اسم المستخدم</label>
-        <input id="loginUsername" class="admin-input" type="text" autocomplete="username" value="admin" />
-      </div>
+      <form id="admin-login-form" class="admin-form">
+        <div class="form-group">
+          <label for="admin-username">اسم المستخدم</label>
+          <input
+            type="text"
+            id="admin-username"
+            placeholder="مثال: admin"
+            required
+          />
+        </div>
 
-      <div class="admin-input-group">
-        <label class="admin-input-label" for="loginPassword">كلمة المرور</label>
-        <input id="loginPassword" class="admin-input" type="password" autocomplete="current-password" />
-      </div>
+        <div class="form-group">
+          <label for="admin-password">كلمة المرور</label>
+          <input
+            type="password"
+            id="admin-password"
+            placeholder="••••••••"
+            required
+          />
+        </div>
 
-      <button id="loginBtn" class="admin-btn-main">دخول إلى لوحة التحكم</button>
+        <button type="submit" class="btn-primary full-width">
+          دخول
+        </button>
 
-      <div id="loginMessage" class="admin-error" style="display:none;"></div>
-
-      <div class="admin-login-footer">
-        <span>يحفظ النظام جلسة الأدمن تلقائياً على هذا الجهاز.</span>
-      </div>
+        <p class="admin-helper-text">
+          <strong>تنبيه:</strong> بيانات الدخول تحفظ في متصفحك (localStorage)
+          و ليست حماية حقيقية 100٪. للحماية الكاملة يفضّل ربطها مع الباك-إند.
+        </p>
+      </form>
     </div>
   </div>
 
-  <!-- ========= لوحة التحكم ========= -->
-  <div id="adminApp" class="admin-app hidden">
+  <!-- لوحة التحكم الرئيسية -->
+  <div id="admin-dashboard" class="admin-dashboard hidden">
+    <!-- رأس الصفحة -->
+    <header class="admin-header">
+      <div class="admin-header-left">
+        <img src="logo-royal-touch.png" alt="Royal Touch" class="admin-header-logo" />
+        <div>
+          <h1 class="admin-header-title">لوحة التحكم</h1>
+          <p class="admin-header-subtitle">إدارة متجر Royal Touch (نساء وأطفال)</p>
+        </div>
+      </div>
+
+      <div class="admin-header-right">
+        <span id="admin-current-user" class="admin-user-pill">
+          مرحباً، مدير
+        </span>
+        <button id="admin-logout-btn" class="btn-ghost">تسجيل الخروج</button>
+      </div>
+    </header>
+
     <div class="admin-layout">
-      <header class="admin-topbar">
-        <div class="admin-top-left">
-          <img src="logo.png" class="admin-top-logo" alt="Royal Touch logo" />
-          <div class="admin-top-title">
-            <span>Royal Touch Admin</span>
-            <span>إدارة الطلبات والعروض والمنتجات</span>
+      <!-- القائمة الجانبية -->
+      <aside class="admin-sidebar">
+        <nav>
+          <button class="sidebar-link active" data-target="admin-section-dashboard">
+            <span>الرئيسية</span>
+          </button>
+          <button class="sidebar-link" data-target="admin-section-products">
+            <span>المنتجات و الأصناف</span>
+          </button>
+          <button class="sidebar-link" data-target="admin-section-offers">
+            <span>العروض الخاصة</span>
+          </button>
+          <button class="sidebar-link" data-target="admin-section-orders">
+            <span>الطلبات والإشعارات</span>
+          </button>
+          <button class="sidebar-link" data-target="admin-section-settings">
+            <span>إعدادات الأدمن</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- المحتوى الرئيسي -->
+      <main class="admin-main">
+
+        <!-- قسم: الرئيسية / إحصائيات -->
+        <section id="admin-section-dashboard" class="admin-section">
+          <h2 class="section-title">نظرة عامة</h2>
+
+          <div class="cards-grid">
+            <div class="stat-card glass-card">
+              <p class="stat-label">إجمالي المنتجات</p>
+              <p id="stat-total-products" class="stat-value">0</p>
+            </div>
+            <div class="stat-card glass-card">
+              <p class="stat-label">العروض الفعّالة</p>
+              <p id="stat-total-offers" class="stat-value">0</p>
+            </div>
+            <div class="stat-card glass-card">
+              <p class="stat-label">أصناف المنتجات</p>
+              <p id="stat-total-categories" class="stat-value">0</p>
+            </div>
+            <div class="stat-card glass-card">
+              <p class="stat-label">أحدث تحديث</p>
+              <p id="stat-last-update" class="stat-value small">—</p>
+            </div>
           </div>
-        </div>
-        <div class="admin-top-right">
-          <span id="adminWelcomeText">مرحباً، أدمن</span>
-          <span class="admin-badge">متجر زهري &amp; ذهبي</span>
-          <button id="logoutBtn" class="admin-btn-outline">تسجيل خروج</button>
-        </div>
-      </header>
 
-      <div class="admin-main">
-        <aside class="admin-sidebar">
-          <div class="admin-nav-title">الأقسام</div>
-          <button class="admin-nav-btn active" data-section="statsSection">
-            الإحصائيات العامة
-            <span>نظرة سريعة</span>
-          </button>
-          <button class="admin-nav-btn" data-section="ordersSection">
-            الطلبات
-            <span>إدارة وتتبع</span>
-          </button>
-          <button class="admin-nav-btn" data-section="productsSection">
-            المنتجات والعروض
-            <span>إضافة وتعديل</span>
-          </button>
-          <button class="admin-nav-btn" data-section="settingsSection">
-            إعدادات الأدمن
-            <span>كلمة المرور والإشعارات</span>
-          </button>
-        </aside>
-
-        <main class="admin-content">
-          <!-- ===== قسم الإحصائيات ===== -->
-          <section id="statsSection" class="admin-section active">
-            <div class="admin-section-header">
-              <h2>الإحصائيات العامة <span class="admin-chip">تحديث مباشر من الـ API</span></h2>
-              <button id="refreshStatsBtn" class="admin-btn-outline">تحديث الإحصائيات</button>
-            </div>
-
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-label">إجمالي المنتجات</div>
-                <div id="statTotalProducts" class="stat-value">–</div>
-                <div class="stat-sub">يشمل جميع الأصناف</div>
-              </div>
-
-              <div class="stat-card">
-                <div class="stat-label">إجمالي الطلبات</div>
-                <div id="statTotalOrders" class="stat-value">–</div>
-                <div class="stat-sub">منذ بداية التشغيل</div>
-              </div>
-
-              <div class="stat-card">
-                <div class="stat-label">الطلبات المعلقة</div>
-                <div id="statPendingOrders" class="stat-value">–</div>
-                <div class="stat-sub">تحتاج إلى متابعة سريعة</div>
-              </div>
-
-              <div class="stat-card">
-                <div class="stat-label">إجمالي الإيرادات</div>
-                <div id="statTotalRevenue" class="stat-value">–</div>
-                <div class="stat-sub">المبلغ بالعملة المعتمدة في النظام</div>
-              </div>
-            </div>
-
-            <p class="admin-small">
-              * يتم جلب الأرقام من المسار <code>/api/admin/stats</code>. تأكد من أن
-              السيرفر يعمل بشكل صحيح.
+          <div class="info-card glass-card">
+            <h3>ملاحظة بخصوص الباك-إند</h3>
+            <p>
+              يمكن لاحقاً ربط هذه اللوحة مع الـ API الذي أنشأناه بالـ FastAPI
+              <code>/api/products</code> و <code>/api/orders</code> و
+              <code>/api/admin/stats</code> لتصبح الأرقام حقيقية بدلاً من
+              التخزين المحلي.
             </p>
-          </section>
+          </div>
+        </section>
 
-          <!-- ===== قسم الطلبات ===== -->
-          <section id="ordersSection" class="admin-section">
-            <div class="admin-section-header">
-              <h2>إدارة الطلبات <span class="admin-chip">تأكيد / تسليم / إلغاء</span></h2>
-              <button id="refreshOrdersBtn" class="admin-btn-outline">تحديث الطلبات</button>
-            </div>
+        <!-- قسم: المنتجات و الأصناف -->
+        <section id="admin-section-products" class="admin-section hidden">
+          <div class="section-header">
+            <h2 class="section-title">إدارة المنتجات و الأصناف</h2>
+            <button id="btn-reset-products" class="btn-ghost-sm">
+              إعادة تعيين البيانات التجريبية
+            </button>
+          </div>
 
-            <div class="orders-filters">
-              <span>فلترة حسب الحالة:</span>
-              <select id="ordersStatusFilter">
-                <option value="">الكل</option>
-                <option value="pending">معلقة</option>
-                <option value="confirmed">مؤكدة</option>
-                <option value="delivered">تم التسليم</option>
-                <option value="cancelled">ملغاة</option>
-              </select>
-              <button id="applyOrdersFilterBtn">تطبيق الفلتر</button>
-            </div>
+          <div class="two-columns">
+            <!-- نموذج إضافة / تعديل منتج -->
+            <div class="glass-card">
+              <h3 class="card-title">إضافة / تعديل منتج</h3>
 
-            <div class="admin-table-wrapper">
-              <table class="admin-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>رقم الطلب</th>
-                    <th>العميل</th>
-                    <th>الهاتف</th>
-                    <th>الإجمالي</th>
-                    <th>الحالة</th>
-                    <th>وقت الطلب</th>
-                    <th>إجراءات</th>
-                  </tr>
-                </thead>
-                <tbody id="ordersTableBody">
-                  <tr>
-                    <td colspan="8" style="text-align:center; padding:0.75rem;">
-                      لا توجد بيانات حتى الآن.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+              <form id="product-form" class="admin-form">
+                <input type="hidden" id="product-id" />
 
-            <p class="wa-hint">
-              عند استلام طلب جديد يمكنك الضغط على الرابط لإعلام فريق العمل على واتساب
-              (Business):
-              <a id="waNotifyLink" target="_blank"
-                href="https://wa.me/218917040244?text=يوجد%20طلب%20جديد%20على%20متجر%20Royal%20Touch">
-                إرسال إشعار على واتساب 0917040244
-              </a>
-              <br />
-              ** لا يمكن للمتصفح إرسال الرسالة تلقائياً، لكن يمكن فتح المحادثة جاهزة
-              لك بضغطة واحدة.
-            </p>
-          </section>
-
-          <!-- ===== قسم المنتجات والعروض ===== -->
-          <section id="productsSection" class="admin-section">
-            <div class="admin-section-header">
-              <h2>المنتجات والعروض <span class="admin-chip">إضافة / تعديل / حذف</span></h2>
-              <button id="refreshProductsBtn" class="admin-btn-outline">تحديث قائمة المنتجات</button>
-            </div>
-
-            <div class="products-layout">
-              <!-- قائمة المنتجات -->
-              <div class="admin-card">
-                <h3>قائمة المنتجات الحالية</h3>
-                <p class="admin-small">
-                  اضغط على أي صف لتعبئة نموذج التعديل. الأحجام تُعرض بالشكل:
-                  <code>S(10) / M(5)</code>.
-                </p>
-                <div class="admin-table-wrapper" style="margin-top:0.4rem;">
-                  <table class="admin-table">
-                    <thead>
-                      <tr>
-                        <th>الاسم</th>
-                        <th>القسم</th>
-                        <th>السعر</th>
-                        <th>عرض</th>
-                        <th>الأحجام</th>
-                        <th>حذف</th>
-                      </tr>
-                    </thead>
-                    <tbody id="productsTableBody">
-                      <tr>
-                        <td colspan="6" style="text-align:center; padding:0.7rem;">
-                          لا توجد منتجات بعد.
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div class="form-group">
+                  <label for="product-name">اسم المنتج</label>
+                  <input
+                    type="text"
+                    id="product-name"
+                    placeholder="مثال: فستان أطفال وردي"
+                    required
+                  />
                 </div>
-              </div>
 
-              <!-- نموذج الإضافة / التعديل -->
-              <div class="admin-card">
-                <h3 id="productFormTitle">إضافة منتج جديد</h3>
-                <p class="admin-small">
-                  الحقول المعلمة مطلوبة. لتحديد الأحجام استخدم الصيغة:
-                  <code>S:10, M:5, L:0</code> (الحجم:الكمية).
-                </p>
-                <form id="productForm">
-                  <input type="hidden" id="productId" />
-
-                  <div class="admin-form-grid">
-                    <div class="admin-input-group">
-                      <label class="admin-input-label" for="productName">اسم
-                        المنتج*</label>
-                      <input id="productName" class="admin-input" type="text" required />
-                    </div>
-
-                    <div class="admin-input-group">
-                      <label class="admin-input-label" for="productCategory">القسم /
-                        الفئة*</label>
-                      <input id="productCategory" class="admin-input" type="text" required />
-                    </div>
-
-                    <div class="admin-input-group">
-                      <label class="admin-input-label" for="productPrice">السعر
-                        الأساسي*</label>
-                      <input id="productPrice" class="admin-input" type="number" step="0.01"
-                        required />
-                    </div>
-
-                    <div class="admin-input-group">
-                      <label class="admin-input-label" for="productDiscountPrice">سعر
-                        العرض (إن وجد)</label>
-                      <input id="productDiscountPrice" class="admin-input" type="number"
-                        step="0.01" />
-                    </div>
-
-                    <div class="admin-input-group full">
-                      <label class="admin-input-label" for="productDescription">الوصف
-                        المختصر*</label>
-                      <textarea id="productDescription" class="admin-input"
-                        required></textarea>
-                    </div>
-
-                    <div class="admin-input-group full">
-                      <label class="admin-input-label" for="productSizes">الأحجام
-                        والكمية*</label>
-                      <input id="productSizes" class="admin-input" type="text" placeholder="S:10, M:5, L:0"
-                        required />
-                    </div>
-
-                    <div class="admin-input-group full">
-                      <label class="admin-input-label" for="productImages">روابط
-                        الصور (اختياري)</label>
-                      <input id="productImages" class="admin-input" type="text"
-                        placeholder="url1.jpg, url2.jpg" />
-                    </div>
-                  </div>
-
-                  <div class="admin-checkbox-row">
-                    <input id="productIsOffer" type="checkbox" />
-                    <label for="productIsOffer">هذا المنتج ضمن العروض الخاصة (Offer)</label>
-                  </div>
-
-                  <div class="admin-form-actions">
-                    <button type="submit" class="btn-primary">حفظ المنتج</button>
-                    <button type="button" id="resetProductFormBtn" class="btn-secondary">
-                      تفريغ النموذج
-                    </button>
-                    <button type="button" id="deleteCurrentProductBtn" class="btn-danger" style="display:none;">
-                      حذف هذا المنتج
-                    </button>
-                  </div>
-
-                  <div id="productFormMessage" class="admin-success" style="display:none;"></div>
-                </form>
-              </div>
-            </div>
-          </section>
-
-          <!-- ===== إعدادات الأدمن ===== -->
-          <section id="settingsSection" class="admin-section">
-            <div class="admin-section-header">
-              <h2>إعدادات الأدمن <span class="admin-chip">أمان وإشعارات</span></h2>
-            </div>
-
-            <div class="settings-grid">
-              <!-- تغيير كلمة المرور -->
-              <div class="admin-card">
-                <h3>تغيير كلمة مرور الأدمن</h3>
-                <p class="admin-small">
-                  يتطلب هذا الجزء وجود مسار في الـ Backend باسم
-                  <code>/api/admin/change-password</code> يستقبل
-                  <code>old_password</code> و <code>new_password</code>. تأكد من تحديث
-                  الكود في السيرفر.
-                </p>
-
-                <form id="changePasswordForm">
-                  <div class="admin-input-group">
-                    <label class="admin-input-label" for="oldPassword">كلمة المرور
-                      الحالية</label>
-                    <input id="oldPassword" class="admin-input" type="password" />
-                  </div>
-
-                  <div class="admin-input-group">
-                    <label class="admin-input-label" for="newPassword">كلمة المرور
-                      الجديدة</label>
-                    <input id="newPassword" class="admin-input" type="password" />
-                  </div>
-
-                  <div class="admin-input-group">
-                    <label class="admin-input-label" for="newPasswordConfirm">تأكيد كلمة
-                      المرور</label>
-                    <input id="newPasswordConfirm" class="admin-input" type="password" />
-                  </div>
-
-                  <button type="submit" class="btn-primary">تحديث كلمة المرور</button>
-
-                  <div id="passwordMessage" class="admin-success" style="display:none;"></div>
-                </form>
-              </div>
-
-              <!-- إعداد رقم الواتساب محلياً -->
-              <div class="admin-card">
-                <h3>إعداد رقم واتساب الأعمال</h3>
-                <p class="admin-small">
-                  يتم حفظ هذا الرقم فقط في المتصفح (LocalStorage) ويُستخدم لإنشاء روابط
-                  سريعة لإرسال إشعارات عند وجود طلبات جديدة.
-                </p>
-
-                <div class="admin-input-group">
-                  <label class="admin-input-label" for="waNumberInput">رقم الواتساب
-                    (مع كود الدولة)</label>
-                  <input id="waNumberInput" class="admin-input" type="text" placeholder="مثال: 218917040244" />
+                <div class="form-group">
+                  <label for="product-category">الصنف / الفئة</label>
+                  <input
+                    type="text"
+                    id="product-category"
+                    placeholder="مثال: أطفال، نساء، اكسسوارات"
+                    list="category-suggestions"
+                    required
+                  />
+                  <datalist id="category-suggestions"></datalist>
                 </div>
-                <button id="saveWaNumberBtn" class="btn-secondary">حفظ الرقم محلياً</button>
 
-                <p class="admin-small" id="waNumberStatus"></p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="product-price">السعر (دينار)</label>
+                    <input
+                      type="number"
+                      id="product-price"
+                      min="0"
+                      step="0.01"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="product-stock">الكمية بالمخزن</label>
+                    <input
+                      type="number"
+                      id="product-stock"
+                      min="0"
+                      step="1"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="product-image">رابط صورة المنتج (اختياري)</label>
+                  <input
+                    type="text"
+                    id="product-image"
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <div class="form-row align-center">
+                  <div class="form-group checkbox-group">
+                    <input type="checkbox" id="product-is-offer" />
+                    <label for="product-is-offer">هذا المنتج ضمن العروض</label>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="product-discount">سعر العرض (اختياري)</label>
+                    <input
+                      type="number"
+                      id="product-discount"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn-primary">
+                    حفظ المنتج
+                  </button>
+                  <button type="button" id="product-reset-btn" class="btn-ghost-sm">
+                    مسح النموذج
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- جدول المنتجات -->
+            <div class="glass-card">
+              <h3 class="card-title">قائمة المنتجات</h3>
+              <div class="table-wrapper">
+                <table class="rt-table">
+                  <thead>
+                    <tr>
+                      <th>الاسم</th>
+                      <th>الصنف</th>
+                      <th>السعر</th>
+                      <th>عرض؟</th>
+                      <th>م.عرض</th>
+                      <th>مخزون</th>
+                      <th>تحكم</th>
+                    </tr>
+                  </thead>
+                  <tbody id="products-table-body">
+                    <!-- يتم الملء عبر JavaScript -->
+                  </tbody>
+                </table>
               </div>
             </div>
-          </section>
-        </main>
-      </div>
+          </div>
+        </section>
+
+        <!-- قسم: العروض -->
+        <section id="admin-section-offers" class="admin-section hidden">
+          <h2 class="section-title">العروض الخاصة</h2>
+          <p class="section-description">
+            هنا تظهر المنتجات التي تم تفعيل خيار <strong>ضمن العروض</strong> لها،
+            لتستخدمها في صفحة العروض أو الواجهة الرئيسية.
+          </p>
+
+          <div id="offers-list" class="cards-grid">
+            <!-- يتم الملء عبر JavaScript -->
+          </div>
+        </section>
+
+        <!-- قسم: الطلبات و إشعارات واتساب -->
+        <section id="admin-section-orders" class="admin-section hidden">
+          <h2 class="section-title">الطلبات و إشعارات واتساب</h2>
+
+          <div class="two-columns">
+            <div class="glass-card">
+              <h3 class="card-title">تنبيه عبر واتساب أعمال</h3>
+              <p>
+                حالياً لا يوجد ربط مباشر مع الباك-إند، ولكن يمكنك
+                استخدام الزر التالي لإرسال رسالة سريعة إلى
+                رقم واتساب الأعمال المرتبط بالمتجر:
+              </p>
+
+              <p class="whatsapp-number">
+                رقم واتساب الأعمال:
+                <strong>0917040244</strong>
+              </p>
+
+              <button id="whatsapp-open-btn" class="btn-whatsapp">
+                فتح واتساب وإرسال إشعار
+              </button>
+
+              <p class="admin-helper-text">
+                للإشعارات التلقائية (كل طلب جديد يرسل رسالة وحده)
+                نحتاج كود في الباك-إند يستدعي
+                واجهة واتساب أعمال أو Twilio مثلاً.
+              </p>
+            </div>
+
+            <div class="glass-card">
+              <h3 class="card-title">ملاحظات حول ربط الطلبات</h3>
+              <ul class="admin-list">
+                <li>يمكن ربط هذه الصفحة مع مسار <code>/api/orders</code> لعرض الطلبات.</li>
+                <li>إضافة أزرار لتغيير حالة الطلب (قيد المعالجة، تم التسليم، ملغي).</li>
+                <li>زر بجانب كل طلب لفتح واتساب برسالة جاهزة لهذا الطلب.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- قسم: إعدادات الأدمن -->
+        <section id="admin-section-settings" class="admin-section hidden">
+          <h2 class="section-title">إعدادات الأدمن</h2>
+
+          <div class="two-columns">
+            <!-- تغيير بيانات الأدمن -->
+            <div class="glass-card">
+              <h3 class="card-title">تغيير اسم المستخدم / كلمة المرور</h3>
+
+              <form id="admin-settings-form" class="admin-form">
+                <div class="form-group">
+                  <label for="settings-username">اسم المستخدم الحالي / الجديد</label>
+                  <input
+                    type="text"
+                    id="settings-username"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="settings-old-password">كلمة المرور الحالية</label>
+                  <input
+                    type="password"
+                    id="settings-old-password"
+                    required
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="settings-new-password">كلمة المرور الجديدة</label>
+                    <input
+                      type="password"
+                      id="settings-new-password"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="settings-new-password-confirm">تأكيد كلمة المرور الجديدة</label>
+                    <input
+                      type="password"
+                      id="settings-new-password-confirm"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                  حفظ بيانات الأدمن
+                </button>
+
+                <p class="admin-helper-text">
+                  هذه الإعدادات تحفظ في متصفحك فقط (localStorage).
+                  لو عندك باك-إند مستعد، يمكننا جعل النموذج يستدعي
+                  API حقيقي لتغيير كلمة المرور في قاعدة البيانات.
+                </p>
+              </form>
+            </div>
+
+            <!-- صلاحيات إضافية مقترحة -->
+            <div class="glass-card">
+              <h3 class="card-title">صلاحيات مفيدة للأدمن (مقترحة)</h3>
+              <ul class="admin-list">
+                <li>إدارة المستخدمين الآخرين (مدير فرعي / موظف مبيعات).</li>
+                <li>عرض سجل الدخول و آخر العمليات على المنتجات والطلبات.</li>
+                <li>رفع بنرات (صور) للحملات الإعلانية الخاصة.</li>
+                <li>تصدير قائمة المنتجات أو الطلبات إلى ملف Excel.</li>
+                <li>ضبط حد أدنى للكمية لتنبيه نفاذ بعض المقاسات.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </main>
     </div>
   </div>
 
+  <!-- سكربت الإدارة (Vanilla JS + localStorage) -->
   <script>
-    // ========= الإعداد الأساسي للـ API =========
-    // ✳️ مهم: عدّل هذا الرابط ليكون رابط الـ Backend (FastAPI) الخاص بك
-    const API_BASE_URL = "https://YOUR-BACKEND-URL/api";
+    // ألوان/ثوابت
+    const LS_KEY_ADMIN = 'rt_admin_credentials';
+    const LS_KEY_PRODUCTS = 'rt_admin_products';
 
-    // عناصر عامة
-    const loginView = document.getElementById("adminLoginView");
-    const adminApp = document.getElementById("adminApp");
-    const loginUsername = document.getElementById("loginUsername");
-    const loginPassword = document.getElementById("loginPassword");
-    const loginBtn = document.getElementById("loginBtn");
-    const loginMessage = document.getElementById("loginMessage");
-    const adminWelcomeText = document.getElementById("adminWelcomeText");
-    const logoutBtn = document.getElementById("logoutBtn");
+    // بيانات افتراضية للأدمن أول مرة
+    function getAdminCredentials() {
+      const saved = localStorage.getItem(LS_KEY_ADMIN);
+      if (saved) return JSON.parse(saved);
 
-    const navButtons = document.querySelectorAll(".admin-nav-btn");
-    const sections = document.querySelectorAll(".admin-section");
+      const defaults = { username: 'admin', password: 'admin123' };
+      localStorage.setItem(LS_KEY_ADMIN, JSON.stringify(defaults));
+      return defaults;
+    }
 
-    const refreshStatsBtn = document.getElementById("refreshStatsBtn");
-    const refreshOrdersBtn = document.getElementById("refreshOrdersBtn");
-    const refreshProductsBtn = document.getElementById("refreshProductsBtn");
-
-    // إحصائيات
-    const statTotalProducts = document.getElementById("statTotalProducts");
-    const statTotalOrders = document.getElementById("statTotalOrders");
-    const statPendingOrders = document.getElementById("statPendingOrders");
-    const statTotalRevenue = document.getElementById("statTotalRevenue");
-
-    // الطلبات
-    const ordersTableBody = document.getElementById("ordersTableBody");
-    const ordersStatusFilter = document.getElementById("ordersStatusFilter");
-    const applyOrdersFilterBtn = document.getElementById("applyOrdersFilterBtn");
-    const waNotifyLink = document.getElementById("waNotifyLink");
-    let lastPendingCount = 0;
+    function saveAdminCredentials(creds) {
+      localStorage.setItem(LS_KEY_ADMIN, JSON.stringify(creds));
+    }
 
     // المنتجات
-    const productsTableBody = document.getElementById("productsTableBody");
-    const productForm = document.getElementById("productForm");
-    const productFormTitle = document.getElementById("productFormTitle");
-    const productIdInput = document.getElementById("productId");
-    const productNameInput = document.getElementById("productName");
-    const productDescriptionInput = document.getElementById("productDescription");
-    const productPriceInput = document.getElementById("productPrice");
-    const productCategoryInput = document.getElementById("productCategory");
-    const productSizesInput = document.getElementById("productSizes");
-    const productImagesInput = document.getElementById("productImages");
-    const productIsOfferInput = document.getElementById("productIsOffer");
-    const productDiscountPriceInput = document.getElementById("productDiscountPrice");
-    const resetProductFormBtn = document.getElementById("resetProductFormBtn");
-    const deleteCurrentProductBtn = document.getElementById("deleteCurrentProductBtn");
-    const productFormMessage = document.getElementById("productFormMessage");
-
-    // إعدادات الأدمن
-    const changePasswordForm = document.getElementById("changePasswordForm");
-    const oldPasswordInput = document.getElementById("oldPassword");
-    const newPasswordInput = document.getElementById("newPassword");
-    const newPasswordConfirmInput = document.getElementById("newPasswordConfirm");
-    const passwordMessage = document.getElementById("passwordMessage");
-    const waNumberInput = document.getElementById("waNumberInput");
-    const saveWaNumberBtn = document.getElementById("saveWaNumberBtn");
-    const waNumberStatus = document.getElementById("waNumberStatus");
-
-    // ========= أدوات مساعدة =========
-    function getAuthHeaders(isJson = true) {
-      const headers = {};
-      const token = localStorage.getItem("adminToken");
-      if (isJson) headers["Content-Type"] = "application/json";
-      if (token) headers["Authorization"] = "Bearer " + token;
-      return headers;
+    function getProducts() {
+      const saved = localStorage.getItem(LS_KEY_PRODUCTS);
+      if (saved) return JSON.parse(saved);
+      return [];
     }
 
-    function showLoginError(msg) {
-      loginMessage.style.display = "block";
-      loginMessage.className = "admin-error";
-      loginMessage.textContent = msg;
+    function saveProducts(products) {
+      localStorage.setItem(LS_KEY_PRODUCTS, JSON.stringify(products));
+      updateStats();
+      renderProductsTable();
+      renderOffersCards();
+      fillCategorySuggestions();
     }
 
-    function showLoginSuccess(msg) {
-      loginMessage.style.display = "block";
-      loginMessage.className = "admin-success";
-      loginMessage.textContent = msg;
-    }
+    // عناصر DOM عامة
+    const loginScreen = document.getElementById('admin-login-screen');
+    const dashboard = document.getElementById('admin-dashboard');
+    const loginForm = document.getElementById('admin-login-form');
+    const loginUsernameInput = document.getElementById('admin-username');
+    const loginPasswordInput = document.getElementById('admin-password');
+    const currentUserLabel = document.getElementById('admin-current-user');
+    const logoutBtn = document.getElementById('admin-logout-btn');
 
-    function switchSection(sectionId) {
-      sections.forEach((sec) => {
-        sec.classList.toggle("active", sec.id === sectionId);
-      });
-      navButtons.forEach((btn) => {
-        btn.classList.toggle(
-          "active",
-          btn.getAttribute("data-section") === sectionId
-        );
-      });
-    }
+    // تبديل الأقسام في اللوحة
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const sections = document.querySelectorAll('.admin-section');
 
-    function tagForStatus(status) {
-      const map = {
-        pending: "tag-pending",
-        confirmed: "tag-confirmed",
-        delivered: "tag-delivered",
-        cancelled: "tag-cancelled",
-      };
-      const labelMap = {
-        pending: "معلقة",
-        confirmed: "مؤكدة",
-        delivered: "تم التسليم",
-        cancelled: "ملغاة",
-      };
-      const cls = map[status] || "tag-pending";
-      const label = labelMap[status] || status;
-      return `<span class="admin-tag ${cls}">${label}</span>`;
-    }
+    sidebarLinks.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sidebarLinks.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-    function parseSizesText(text) {
-      if (!text) return [];
-      return text
-        .split(",")
-        .map((part) => part.trim())
-        .filter(Boolean)
-        .map((pair) => {
-          const [size, qty] = pair.split(":");
-          return {
-            size: (size || "").trim(),
-            quantity: Number((qty || "0").trim()) || 0,
-          };
-        })
-        .filter((s) => s.size);
-    }
-
-    function sizesToDisplay(sizes) {
-      if (!Array.isArray(sizes) || !sizes.length) return "-";
-      return sizes
-        .map((s) => `${s.size}(${s.quantity ?? 0})`)
-        .join(" / ");
-    }
-
-    function sizesToTextInput(sizes) {
-      if (!Array.isArray(sizes) || !sizes.length) return "";
-      return sizes.map((s) => `${s.size}:${s.quantity ?? 0}`).join(", ");
-    }
-
-    function imagesToTextInput(images) {
-      if (!Array.isArray(images) || !images.length) return "";
-      return images.join(", ");
-    }
-
-    function normalizeWhatsAppNumber(raw) {
-      const digits = (raw || "").replace(/\D/g, "");
-      if (!digits) return "";
-      return digits;
-    }
-
-    function updateWhatsAppLink() {
-      const saved = localStorage.getItem("waBusinessNumber") || "218917040244";
-      const msg = encodeURIComponent("يوجد طلب جديد على متجر Royal Touch");
-      waNotifyLink.href = `https://wa.me/${saved}?text=${msg}`;
-    }
-
-    // ========= تسجيل الدخول / الخروج =========
-    loginBtn.addEventListener("click", async () => {
-      const username = loginUsername.value.trim();
-      const password = loginPassword.value;
-
-      if (!username || !password) {
-        showLoginError("الرجاء إدخال اسم المستخدم وكلمة المرور.");
-        return;
-      }
-
-      loginBtn.disabled = true;
-      loginBtn.textContent = "جارٍ تسجيل الدخول...";
-
-      try {
-        const res = await fetch(`${API_BASE_URL}/admin/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
+        const targetId = btn.getAttribute('data-target');
+        sections.forEach(sec => {
+          sec.classList.toggle('hidden', sec.id !== targetId);
         });
+      });
+    });
 
-        if (!res.ok) {
-          showLoginError("بيانات الدخول غير صحيحة.");
-        } else {
-          const data = await res.json();
-          localStorage.setItem("adminToken", data.token || "");
-          localStorage.setItem("adminUsername", data.username || username);
-          showLoginSuccess("تم تسجيل الدخول بنجاح، سيتم فتح لوحة التحكم الآن.");
+    // تسجيل الدخول
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const creds = getAdminCredentials();
 
-          // إظهار لوحة التحكم
-          setTimeout(() => {
-            initAdminApp();
-          }, 400);
-        }
-      } catch (err) {
-        console.error(err);
-        showLoginError("حدث خطأ في الاتصال بالسيرفر.");
-      } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = "دخول إلى لوحة التحكم";
+      const u = loginUsernameInput.value.trim();
+      const p = loginPasswordInput.value;
+
+      if (u === creds.username && p === creds.password) {
+        showDashboard(u);
+      } else {
+        alert('بيانات الدخول غير صحيحة.');
       }
     });
 
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("adminToken");
-      localStorage.removeItem("adminUsername");
-      loginPassword.value = "";
-      adminApp.classList.add("hidden");
-      loginView.style.display = "flex";
+    function showDashboard(username) {
+      loginScreen.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      currentUserLabel.textContent = 'مرحباً، ' + username;
+      updateStats();
+      renderProductsTable();
+      renderOffersCards();
+      fillCategorySuggestions();
+    }
+
+    // تسجيل خروج
+    logoutBtn.addEventListener('click', () => {
+      dashboard.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      loginPasswordInput.value = '';
     });
 
-    // تحقق من جلسة سابقة
-    function checkExistingSession() {
-      const token = localStorage.getItem("adminToken");
-      if (token) {
-        initAdminApp();
-      }
-    }
+    // ===== إدارة المنتجات =====
+    const productForm = document.getElementById('product-form');
+    const productIdInput = document.getElementById('product-id');
+    const productNameInput = document.getElementById('product-name');
+    const productCategoryInput = document.getElementById('product-category');
+    const productPriceInput = document.getElementById('product-price');
+    const productStockInput = document.getElementById('product-stock');
+    const productImageInput = document.getElementById('product-image');
+    const productIsOfferInput = document.getElementById('product-is-offer');
+    const productDiscountInput = document.getElementById('product-discount');
+    const productsTableBody = document.getElementById('products-table-body');
+    const productResetBtn = document.getElementById('product-reset-btn');
+    const resetProductsBtn = document.getElementById('btn-reset-products');
 
-    // ========= تهيئة لوحة التحكم =========
-    function initAdminApp() {
-      const username = localStorage.getItem("adminUsername") || "أدمن";
-      adminWelcomeText.textContent = `مرحباً، ${username}`;
-
-      loginView.style.display = "none";
-      adminApp.classList.remove("hidden");
-
-      updateWhatsAppLink();
-      const savedWa = localStorage.getItem("waBusinessNumber");
-      if (savedWa) {
-        waNumberInput.value = savedWa;
-        waNumberStatus.textContent = "تم تحميل رقم الواتساب المحفوظ.";
-      }
-
-      loadStats();
-      loadOrders();
-      loadProducts();
-    }
-
-    // ========= الإحصائيات =========
-    async function loadStats() {
-      try {
-        const res = await fetch(`${API_BASE_URL}/admin/stats`, {
-          headers: getAuthHeaders(false),
-        });
-        if (!res.ok) throw new Error("failed");
-        const data = await res.json();
-        statTotalProducts.textContent = data.total_products ?? "0";
-        statTotalOrders.textContent = data.total_orders ?? "0";
-        statPendingOrders.textContent = data.pending_orders ?? "0";
-        statTotalRevenue.textContent = data.total_revenue ?? "0";
-      } catch (err) {
-        console.error("Error loading stats", err);
-      }
-    }
-
-    refreshStatsBtn.addEventListener("click", loadStats);
-
-    // ========= الطلبات =========
-    async function loadOrders() {
-      const statusFilter = ordersStatusFilter.value;
-      let url = `${API_BASE_URL}/orders`;
-      if (statusFilter) {
-        url += `?status_filter=${encodeURIComponent(statusFilter)}`;
-      }
-
-      try {
-        const res = await fetch(url, { headers: getAuthHeaders(false) });
-        const data = await res.json();
-        if (!Array.isArray(data)) {
-          throw new Error("bad data");
-        }
-
-        if (!data.length) {
-          ordersTableBody.innerHTML =
-            '<tr><td colspan="8" style="text-align:center; padding:0.75rem;">لا توجد طلبات حالياً.</td></tr>';
-          return;
-        }
-
-        let pendingCount = 0;
-        const rows = data
-          .map((order, index) => {
-            if (order.status === "pending") pendingCount++;
-            const customer = order.customer_info || {};
-            const date = order.order_date
-              ? new Date(order.order_date).toLocaleString("ar-LY")
-              : "-";
-            const statusHtml = tagForStatus(order.status);
-            const total = order.total_amount ?? 0;
-            const phone = customer.phone || "-";
-
-            return `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${order.order_number || "-"}</td>
-            <td>${customer.name || "-"}</td>
-            <td>${phone}</td>
-            <td>${total}</td>
-            <td>${statusHtml}</td>
-            <td>${date}</td>
-            <td>
-              <button class="admin-btn-xs btn-xs-gold" onclick="updateOrderStatus('${
-                order.id
-              }','confirmed')">تأكيد</button>
-              <button class="admin-btn-xs btn-xs-pink" onclick="updateOrderStatus('${
-                order.id
-              }','delivered')">تم التسليم</button>
-              <button class="admin-btn-xs btn-xs-ghost" onclick="updateOrderStatus('${
-                order.id
-              }','cancelled')">إلغاء</button>
-            </td>
-          </tr>
-          `;
-          })
-          .join("");
-
-        ordersTableBody.innerHTML = rows;
-
-        // تنبيه لو فيه طلبات جديدة معلّقة
-        if (pendingCount > lastPendingCount && lastPendingCount !== 0) {
-          alert("🔔 تم استلام طلب جديد أو أكثر (معلّق). راجع قسم الطلبات.");
-        }
-        lastPendingCount = pendingCount;
-      } catch (err) {
-        console.error("Error loading orders", err);
-        ordersTableBody.innerHTML =
-          '<tr><td colspan="8" style="text-align:center; padding:0.75rem;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
-      }
-    }
-
-    // متاحة عالمياً للأزرار في الجدول
-    window.updateOrderStatus = async function (orderId, newStatus) {
-      if (!orderId) return;
-      const confirmMsg =
-        newStatus === "cancelled"
-          ? "هل أنت متأكد من إلغاء هذا الطلب؟"
-          : "هل تريد تحديث حالة الطلب؟";
-      if (!confirm(confirmMsg)) return;
-
-      try {
-        const res = await fetch(
-          `${API_BASE_URL}/orders/${orderId}/status?new_status=${encodeURIComponent(
-            newStatus
-          )}`,
-          {
-            method: "PUT",
-            headers: getAuthHeaders(false),
-          }
-        );
-        if (!res.ok) {
-          alert("تعذر تحديث حالة الطلب.");
-          return;
-        }
-        await loadOrders();
-      } catch (err) {
-        console.error("Error updating order status", err);
-        alert("حدث خطأ أثناء تحديث الطلب.");
-      }
-    };
-
-    refreshOrdersBtn.addEventListener("click", loadOrders);
-    applyOrdersFilterBtn.addEventListener("click", loadOrders);
-
-    // ========= المنتجات =========
-    async function loadProducts() {
-      try {
-        const res = await fetch(`${API_BASE_URL}/products`, {
-          headers: getAuthHeaders(false),
-        });
-        const data = await res.json();
-        if (!Array.isArray(data) || !data.length) {
-          productsTableBody.innerHTML =
-            '<tr><td colspan="6" style="text-align:center; padding:0.7rem;">لا توجد منتجات بعد.</td></tr>';
-          return;
-        }
-
-        const rows = data
-          .map((p) => {
-            const price =
-              p.is_offer && p.discount_price ? p.discount_price : p.price;
-            const offerLabel = p.is_offer ? "عرض" : "-";
-            return `
-          <tr onclick="fillProductForm('${p.id || ""}')" style="cursor:pointer;">
-            <td>${p.name || "-"}</td>
-            <td>${p.category || "-"}</td>
-            <td>${price ?? 0}</td>
-            <td>${offerLabel}</td>
-            <td>${sizesToDisplay(p.sizes)}</td>
-            <td>
-              <button class="admin-btn-xs btn-xs-ghost" onclick="event.stopPropagation(); deleteProduct('${
-                p.id
-              }');">حذف</button>
-            </td>
-          </tr>
-          `;
-          })
-          .join("");
-
-        productsTableBody.innerHTML = rows;
-        window.__productsCache = data;
-      } catch (err) {
-        console.error("Error loading products", err);
-        productsTableBody.innerHTML =
-          '<tr><td colspan="6" style="text-align:center; padding:0.7rem;">حدث خطأ أثناء تحميل المنتجات.</td></tr>';
-      }
-    }
-
-    refreshProductsBtn.addEventListener("click", loadProducts);
-
-    // تعبئة النموذج عند اختيار منتج
-    window.fillProductForm = function (id) {
-      const products = window.__productsCache || [];
-      const p = products.find((x) => x.id === id);
-      if (!p) return;
-      productIdInput.value = p.id || "";
-      productNameInput.value = p.name || "";
-      productDescriptionInput.value = p.description || "";
-      productPriceInput.value = p.price ?? "";
-      productCategoryInput.value = p.category || "";
-      productSizesInput.value = sizesToTextInput(p.sizes);
-      productImagesInput.value = imagesToTextInput(p.images);
-      productIsOfferInput.checked = !!p.is_offer;
-      productDiscountPriceInput.value = p.discount_price ?? "";
-
-      productFormTitle.textContent = "تعديل منتج";
-      deleteCurrentProductBtn.style.display = "inline-block";
-      productFormMessage.style.display = "none";
-    };
-
-    // إعادة تعيين النموذج
-    function resetProductForm() {
-      productIdInput.value = "";
-      productNameInput.value = "";
-      productDescriptionInput.value = "";
-      productPriceInput.value = "";
-      productCategoryInput.value = "";
-      productSizesInput.value = "";
-      productImagesInput.value = "";
-      productDiscountPriceInput.value = "";
+    function clearProductForm() {
+      productIdInput.value = '';
+      productNameInput.value = '';
+      productCategoryInput.value = '';
+      productPriceInput.value = '';
+      productStockInput.value = '';
+      productImageInput.value = '';
       productIsOfferInput.checked = false;
-      productFormTitle.textContent = "إضافة منتج جديد";
-      deleteCurrentProductBtn.style.display = "none";
-      productFormMessage.style.display = "none";
+      productDiscountInput.value = '';
     }
 
-    resetProductFormBtn.addEventListener("click", resetProductForm);
+    productResetBtn.addEventListener('click', clearProductForm);
 
-    // حفظ المنتج (إضافة أو تعديل)
-    productForm.addEventListener("submit", async (e) => {
+    productForm.addEventListener('submit', e => {
       e.preventDefault();
+      let products = getProducts();
 
-      const id = productIdInput.value.trim();
-      const body = {
+      const id = productIdInput.value || Date.now().toString();
+      const product = {
+        id,
         name: productNameInput.value.trim(),
-        description: productDescriptionInput.value.trim(),
-        price: Number(productPriceInput.value),
         category: productCategoryInput.value.trim(),
-        sizes: parseSizesText(productSizesInput.value),
-        images: (productImagesInput.value || "")
-          .split(",")
-          .map((x) => x.trim())
-          .filter(Boolean),
-        is_offer: productIsOfferInput.checked,
-        discount_price: productDiscountPriceInput.value
-          ? Number(productDiscountPriceInput.value)
-          : null,
+        price: parseFloat(productPriceInput.value),
+        stock: parseInt(productStockInput.value, 10) || 0,
+        image: productImageInput.value.trim(),
+        isOffer: productIsOfferInput.checked,
+        discountPrice: productDiscountInput.value ? parseFloat(productDiscountInput.value) : null
       };
 
-      const isEdit = !!id;
-      const method = isEdit ? "PUT" : "POST";
-      const url = isEdit
-        ? `${API_BASE_URL}/products/${id}`
-        : `${API_BASE_URL}/products`;
-
-      try {
-        const res = await fetch(url, {
-          method,
-          headers: getAuthHeaders(true),
-          body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-          productFormMessage.style.display = "block";
-          productFormMessage.className = "admin-error";
-          productFormMessage.textContent = "تعذر حفظ المنتج. تحقق من البيانات.";
-          return;
-        }
-
-        productFormMessage.style.display = "block";
-        productFormMessage.className = "admin-success";
-        productFormMessage.textContent = isEdit
-          ? "تم تحديث المنتج بنجاح."
-          : "تم إضافة المنتج بنجاح.";
-
-        await loadProducts();
-        if (!isEdit) resetProductForm();
-      } catch (err) {
-        console.error("Error saving product", err);
-        productFormMessage.style.display = "block";
-        productFormMessage.className = "admin-error";
-        productFormMessage.textContent = "حدث خطأ أثناء حفظ البيانات.";
+      const idx = products.findIndex(p => p.id === id);
+      if (idx > -1) {
+        products[idx] = product;
+      } else {
+        products.push(product);
       }
+
+      saveProducts(products);
+      clearProductForm();
+      setLastUpdateNow();
     });
 
-    // حذف المنتج الحالي من النموذج
-    deleteCurrentProductBtn.addEventListener("click", () => {
-      const id = productIdInput.value.trim();
-      if (!id) return;
-      deleteProduct(id);
-    });
+    function renderProductsTable() {
+      const products = getProducts();
+      productsTableBody.innerHTML = '';
 
-    // حذف منتج (متاحة عالمياً للجدول)
-    window.deleteProduct = async function (id) {
-      if (!id) return;
-      if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
+      products.forEach(p => {
+        const tr = document.createElement('tr');
 
-      try {
-        const res = await fetch(`${API_BASE_URL}/products/${id}`, {
-          method: "DELETE",
-          headers: getAuthHeaders(false),
-        });
-        if (!res.ok) {
-          alert("تعذر حذف المنتج.");
-          return;
-        }
-        await loadProducts();
-        if (productIdInput.value.trim() === id) resetProductForm();
-      } catch (err) {
-        console.error("Error deleting product", err);
-        alert("حدث خطأ أثناء حذف المنتج.");
-      }
-    };
+        tr.innerHTML = `
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${p.price.toFixed(2)}</td>
+          <td>${p.isOffer ? 'نعم' : 'لا'}</td>
+          <td>${p.discountPrice ? p.discountPrice.toFixed(2) : '-'}</td>
+          <td>${p.stock}</td>
+          <td>
+            <button class="btn-table" data-action="edit" data-id="${p.id}">تعديل</button>
+            <button class="btn-table danger" data-action="delete" data-id="${p.id}">حذف</button>
+          </td>
+        `;
 
-    // ========= تغيير كلمة المرور =========
-    changePasswordForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const oldPw = oldPasswordInput.value;
-      const newPw = newPasswordInput.value;
-      const newPw2 = newPasswordConfirmInput.value;
-
-      if (!oldPw || !newPw || !newPw2) {
-        passwordMessage.style.display = "block";
-        passwordMessage.className = "admin-error";
-        passwordMessage.textContent = "الرجاء تعبئة جميع الحقول.";
-        return;
-      }
-
-      if (newPw !== newPw2) {
-        passwordMessage.style.display = "block";
-        passwordMessage.className = "admin-error";
-        passwordMessage.textContent = "كلمتا المرور غير متطابقتين.";
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE_URL}/admin/change-password`, {
-          method: "POST",
-          headers: getAuthHeaders(true),
-          body: JSON.stringify({
-            old_password: oldPw,
-            new_password: newPw,
-          }),
-        });
-
-        if (!res.ok) {
-          passwordMessage.style.display = "block";
-          passwordMessage.className = "admin-error";
-          passwordMessage.textContent =
-            "تعذر تغيير كلمة المرور. تأكد من المسار في السيرفر.";
-          return;
-        }
-
-        passwordMessage.style.display = "block";
-        passwordMessage.className = "admin-success";
-        passwordMessage.textContent = "تم تغيير كلمة المرور بنجاح.";
-        oldPasswordInput.value = "";
-        newPasswordInput.value = "";
-        newPasswordConfirmInput.value = "";
-      } catch (err) {
-        console.error("Error changing password", err);
-        passwordMessage.style.display = "block";
-        passwordMessage.className = "admin-error";
-        passwordMessage.textContent = "حدث خطأ أثناء الاتصال بالسيرفر.";
-      }
-    });
-
-    // ========= إعداد رقم واتساب الأعمال محلياً =========
-    saveWaNumberBtn.addEventListener("click", () => {
-      const normalized = normalizeWhatsAppNumber(waNumberInput.value);
-      if (!normalized) {
-        waNumberStatus.textContent = "الرجاء إدخال رقم صالح.";
-        return;
-      }
-      localStorage.setItem("waBusinessNumber", normalized);
-      waNumberStatus.textContent = "تم حفظ رقم الواتساب بنجاح.";
-      updateWhatsAppLink();
-    });
-
-    // ========= التنقل بين الأقسام =========
-    navButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const sectionId = btn.getAttribute("data-section");
-        switchSection(sectionId);
+        productsTableBody.appendChild(tr);
       });
+
+      // أزرار التعديل / الحذف
+      productsTableBody.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const action = btn.getAttribute('data-action');
+          const products = getProducts();
+          const product = products.find(p => p.id === id);
+          if (!product) return;
+
+          if (action === 'edit') {
+            productIdInput.value = product.id;
+            productNameInput.value = product.name;
+            productCategoryInput.value = product.category;
+            productPriceInput.value = product.price;
+            productStockInput.value = product.stock;
+            productImageInput.value = product.image || '';
+            productIsOfferInput.checked = !!product.isOffer;
+            productDiscountInput.value = product.discountPrice || '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else if (action === 'delete') {
+            if (confirm('تأكيد حذف المنتج؟')) {
+              const filtered = products.filter(p => p.id !== id);
+              saveProducts(filtered);
+              setLastUpdateNow();
+            }
+          }
+        });
+      });
+    }
+
+    // إعادة تعيين المنتجات (تفريغ)
+    resetProductsBtn.addEventListener('click', () => {
+      if (confirm('سيتم حذف كل البيانات التجريبية الخاصة بالمنتجات. هل أنت متأكد؟')) {
+        localStorage.removeItem(LS_KEY_PRODUCTS);
+        saveProducts([]);
+        setLastUpdateNow();
+      }
     });
 
-    // بدء التشغيل
-    checkExistingSession();
+    // ===== قسم العروض =====
+    const offersList = document.getElementById('offers-list');
+
+    function renderOffersCards() {
+      const products = getProducts().filter(p => p.isOffer);
+      offersList.innerHTML = '';
+
+      if (!products.length) {
+        offersList.innerHTML = '<p>لا توجد عروض مفعّلة حالياً.</p>';
+        return;
+      }
+
+      products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'offer-card glass-card';
+
+        const priceHtml = p.discountPrice
+          ? `<span class="offer-old-price">${p.price.toFixed(2)} د.ل</span>
+             <span class="offer-new-price">${p.discountPrice.toFixed(2)} د.ل</span>`
+          : `<span class="offer-new-price">${p.price.toFixed(2)} د.ل</span>`;
+
+        card.innerHTML = `
+          <h3>${p.name}</h3>
+          <p class="offer-category">${p.category}</p>
+          <div class="offer-prices">${priceHtml}</div>
+          <p class="offer-stock">الكمية المتوفرة: ${p.stock}</p>
+        `;
+
+        offersList.appendChild(card);
+      });
+    }
+
+    // ===== اقتراح الأصناف =====
+    const categorySuggestions = document.getElementById('category-suggestions');
+    function fillCategorySuggestions() {
+      const products = getProducts();
+      const categories = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
+      categorySuggestions.innerHTML = '';
+      categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        categorySuggestions.appendChild(option);
+      });
+    }
+
+    // ===== الإحصائيات =====
+    const statTotalProducts = document.getElementById('stat-total-products');
+    const statTotalOffers = document.getElementById('stat-total-offers');
+    const statTotalCategories = document.getElementById('stat-total-categories');
+    const statLastUpdate = document.getElementById('stat-last-update');
+
+    function updateStats() {
+      const products = getProducts();
+      const offers = products.filter(p => p.isOffer);
+      const categories = new Set(products.map(p => p.category).filter(Boolean));
+
+      statTotalProducts.textContent = products.length;
+      statTotalOffers.textContent = offers.length;
+      statTotalCategories.textContent = categories.size;
+
+      const last = localStorage.getItem('rt_admin_last_update');
+      statLastUpdate.textContent = last || '—';
+    }
+
+    function setLastUpdateNow() {
+      const now = new Date();
+      const formatted = now.toLocaleString('ar-LY');
+      localStorage.setItem('rt_admin_last_update', formatted);
+      statLastUpdate.textContent = formatted;
+    }
+
+    // ===== إعدادات الأدمن (تغيير كلمة المرور) =====
+    const adminSettingsForm = document.getElementById('admin-settings-form');
+    const settingsUsernameInput = document.getElementById('settings-username');
+    const settingsOldPasswordInput = document.getElementById('settings-old-password');
+    const settingsNewPasswordInput = document.getElementById('settings-new-password');
+    const settingsNewPasswordConfirmInput = document.getElementById('settings-new-password-confirm');
+
+    adminSettingsForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const creds = getAdminCredentials();
+
+      const oldPass = settingsOldPasswordInput.value;
+      const newPass = settingsNewPasswordInput.value;
+      const newPassConfirm = settingsNewPasswordConfirmInput.value;
+      const newUser = settingsUsernameInput.value.trim();
+
+      if (oldPass !== creds.password) {
+        alert('كلمة المرور الحالية غير صحيحة.');
+        return;
+      }
+
+      if (newPass.length < 6) {
+        alert('كلمة المرور الجديدة يجب أن تكون 6 أحرف/أرقام على الأقل.');
+        return;
+      }
+
+      if (newPass !== newPassConfirm) {
+        alert('تأكيد كلمة المرور الجديدة غير مطابق.');
+        return;
+      }
+
+      const updated = {
+        username: newUser || creds.username,
+        password: newPass
+      };
+      saveAdminCredentials(updated);
+      alert('تم تحديث بيانات الأدمن بنجاح.');
+      adminSettingsForm.reset();
+    });
+
+    // تعبئة قيم اسم المستخدم في الإعدادات عند فتح القسم
+    document.querySelector('[data-target="admin-section-settings"]').addEventListener('click', () => {
+      const creds = getAdminCredentials();
+      settingsUsernameInput.value = creds.username;
+    });
+
+    // ===== واتساب أعمال =====
+    const whatsappBtn = document.getElementById('whatsapp-open-btn');
+    whatsappBtn.addEventListener('click', () => {
+      const number = '218917040244'; // بدون 0 في البداية
+      const text = encodeURIComponent('السلام عليكم، هنا إشعار من لوحة تحكم متجر Royal Touch.');
+      const url = `https://wa.me/${number}?text=${text}`;
+      window.open(url, '_blank');
+    });
+
+    // في حال كان المستخدم "مسجل" مسبقاً (يمكن إضافة Token لاحقاً)
+    (function init() {
+      // مجرد تهيئة الإحصائيات (حتى قبل الدخول)
+      updateStats();
+    })();
   </script>
 </body>
 </html>
